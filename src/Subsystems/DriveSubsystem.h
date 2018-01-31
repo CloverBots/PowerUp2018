@@ -2,7 +2,8 @@
 #define DriveSubsystem_H
 #include <WPILib.h>
 #include <Commands/Subsystem.h>
-#include <MultiPIDOutput.h>
+#include <Motor3PIDController.h>
+#include <RotatePIDController.h>
 
 class DriveSubsystem : public Subsystem {
 private:
@@ -24,17 +25,13 @@ private:
 	Encoder* LeftEncoder;
 	Encoder* RightEncoder;
 	AnalogGyro* m_gyro;
-	PIDController* RightPID;
-	PIDController* LeftPID;
-	PIDController* RotatePID;
-	std::unique_ptr<MultiPIDOutput> RightPIDOutput;
-	std::unique_ptr<MultiPIDOutput> LeftPIDOutput;
-	std::unique_ptr<MultiPIDOutput> RotatePIDOutput;
+	Motor3PIDController* RightPID;
+	Motor3PIDController* LeftPID;
+	RotatePIDController* RotatePID;
+
 public:
 	DriveSubsystem();
 	void Drive(double speed, double turn);
-	void PIDDrive();
-	void PIDTankDrive();
 	void Shift(DoubleSolenoid::Value value);
 	void InitDefaultCommand();
 	double GetLeftDistance();

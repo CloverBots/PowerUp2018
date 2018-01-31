@@ -13,7 +13,6 @@ void DriveDistance::Initialize() {
 
 // Called repeatedly when this Command is scheduled to run
 void DriveDistance::Execute() {
-	CommandBase::driveSubsystem->PIDTankDrive();
 }
 
 // Make this return true when this Command no longer needs to run execute()

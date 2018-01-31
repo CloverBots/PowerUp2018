@@ -2,7 +2,7 @@
 #define DriveDistance_H
 
 #include "../CommandBase.h"
-
+#include "WPILib.h"
 class DriveDistance : public CommandBase {
 	double Distance;
 public:

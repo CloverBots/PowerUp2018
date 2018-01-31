@@ -13,6 +13,8 @@
 #include <TimedRobot.h>
 #include "Commands/DriveToSwitchAutoLeft.h"
 #include "Commands/DriveToSwitchAutoRight.h"
+#include "Commands/DriveToSwitchForwardLeft.h"
+#include "Commands/DriveToSwitchForwardRight.h"
 #include "Commands/DriveForwardAuto.h"
 
 class Robot : public frc::TimedRobot {

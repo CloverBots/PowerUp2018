@@ -28,12 +28,9 @@ DriveSubsystem::DriveSubsystem() : Subsystem("driveSubsystem") {
 		RightEncoder->Reset();
 		m_gyro = new AnalogGyro(0);
 		m_gyro->Calibrate();
-		RightPIDOutput.reset(new MultiPIDOutput);
-		LeftPIDOutput.reset(new MultiPIDOutput);
-		RotatePIDOutput.reset(new MultiPIDOutput);
-		RightPID = new PIDController(m_DriveP, m_DriveI, m_DriveD, RightEncoder, RightPIDOutput);
-		LeftPID = new PIDController(m_DriveP, m_DriveI, m_DriveD, LeftEncoder, LeftPIDOutput);
-		RotatePID = new PIDController(m_RotateP, m_RotateI, m_RotateD, m_gyro, RotatePIDOutput);
+		RightPID = new Motor3PIDController(m_DriveP, m_DriveI, m_DriveD, RightEncoder, Front_Right_Motor, Middle_Right_Motor, Back_Right_Motor);
+		LeftPID = new Motor3PIDController(m_DriveP, m_DriveI, m_DriveD, LeftEncoder, Front_Left_Motor, Middle_Left_Motor, Back_Left_Motor);
+		RotatePID = new RotatePIDController(m_RotateP, m_RotateI, m_RotateD, m_gyro, Front_Left_Motor, Middle_Left_Motor, Back_Left_Motor, Front_Right_Motor, Middle_Right_Motor, Back_Right_Motor);
 }
 
 void DriveSubsystem::InitDefaultCommand()
@@ -51,26 +48,6 @@ void DriveSubsystem::Drive(double speed, double turn)
 	Middle_Left_Motor->Set(speed - (turn/3));
 	Back_Right_Motor->Set(-(speed + (turn/3)));
 	Back_Left_Motor->Set(speed - (turn/3));
-}
-
-void DriveSubsystem::PIDDrive()
-{
-	Front_Right_Motor->Set(-PIDRotateSpeed);
-	Front_Left_Motor->Set(PIDRotateSpeed);
-	Middle_Right_Motor->Set(-PIDRotateSpeed);
-	Middle_Left_Motor->Set(PIDRotateSpeed);
-	Back_Right_Motor->Set(-PIDRotateSpeed);
-	Back_Left_Motor->Set(PIDRotateSpeed);
-}
-
-void DriveSubsystem::PIDTankDrive()
-{
-	Front_Right_Motor->Set(-PIDRightSpeed);
-	Front_Left_Motor->Set(PIDLeftSpeed);
-	Middle_Right_Motor->Set(-PIDRightSpeed);
-	Middle_Left_Motor->Set(PIDLeftSpeed);
-	Back_Right_Motor->Set(-PIDRightSpeed);
-	Back_Left_Motor->Set(PIDLeftSpeed);
 }
 
 void DriveSubsystem::Shift(DoubleSolenoid::Value value)

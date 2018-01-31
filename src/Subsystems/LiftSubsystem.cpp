@@ -13,7 +13,6 @@ void LiftSubsystem::InitDefaultCommand() {
 
 void LiftSubsystem::SetSpeed(double speed) {
 	Lift_Motor->Set(speed);
-
 }
 
 // Put methods for controlling this subsystem
