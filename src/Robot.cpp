@@ -28,6 +28,7 @@ public:
 		m_chooser.AddObject("DriveToSwitch", new DriveForwardAuto);
 		m_chooser.AddObject("DriveToSwtichForwardRight", new DriveForwardAuto);
 		m_chooser.AddObject("DriveToSwtichForwardLeft", new DriveForwardAuto);
+		frc::SmartDashboard::PutData("Auto Chooser" , &m_chooser);
 	}
 
 	/**
@@ -58,6 +59,7 @@ public:
 	 * to the if-else structure below with additional strings & commands.
 	 */
 	void AutonomousInit() override {
+		c->Start();
 		autonomousCommand.reset(m_chooser.GetSelected());
 		if(m_chooser.GetSelected()->GetName() == "DriveToSwitch")
 		{
@@ -110,6 +112,9 @@ public:
 	}
 
 	void TeleopInit() override {
+		CommandBase::driveSubsystem->SetDrivePIDEnabled(false);
+		CommandBase::driveSubsystem->SetRotatePIDEnabled(false);
+		c->Start();
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove

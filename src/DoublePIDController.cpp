@@ -5,11 +5,11 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-#include "Motor3PIDController.h"
+#include "DoublePIDController.h"
 
 #include <cmath>
 #include <vector>
-#include <iostream>
+
 #include "HAL/HAL.h"
 #include "Notifier.h"
 #include "PIDOutput.h"
@@ -30,10 +30,9 @@ using namespace frc;
  *               effects calculations of the integral and differental terms.
  *               The default is 50ms.
  */
-Motor3PIDController::Motor3PIDController(double Kp, double Ki, double Kd, PIDSource* source,
-                             PIDOutput* output, PIDOutput* output1, PIDOutput* output2,
-							 PIDOutput* output3, PIDOutput* output4, PIDOutput* output5, double period)
-    : Motor3PIDController(Kp, Ki, Kd, 0.0, source, output, output1, output2, output3, output4, output5, period) {}
+DoublePIDController::DoublePIDController(double Kp, double Ki, double Kd, double source,
+                             PIDOutput* output, double period)
+    : DoublePIDController(Kp, Ki, Kd, 0.0, source, output, period) {}
 
 /**
  * Allocate a PID object with the given constants for P, I, D.
@@ -47,12 +46,10 @@ Motor3PIDController::Motor3PIDController(double Kp, double Ki, double Kd, PIDSou
  *               effects calculations of the integral and differental terms.
  *               The default is 50ms.
  */
-Motor3PIDController::Motor3PIDController(double Kp, double Ki, double Kd, double Kf,
-							 PIDSource* source, PIDOutput* output,
-							 PIDOutput* output1, PIDOutput* output2, 
-							 PIDOutput* output3, PIDOutput* output4, PIDOutput* output5,
+DoublePIDController::DoublePIDController(double Kp, double Ki, double Kd, double Kf,
+                             double source, PIDOutput* output,
                              double period) {
-  m_controlLoop = std::make_unique<Notifier>(&Motor3PIDController::Calculate, this);
+  m_controlLoop = std::make_unique<Notifier>(&DoublePIDController::Calculate, this);
 
   m_P = Kp;
   m_I = Ki;
@@ -61,11 +58,6 @@ Motor3PIDController::Motor3PIDController(double Kp, double Ki, double Kd, double
 
   m_pidInput = source;
   m_pidOutput = output;
-  m_pidOutput1 = output1;
-  m_pidOutput2 = output2;
-  m_pidOutput3 = output3;
-  m_pidOutput4 = output4;
-  m_pidOutput5 = output5;
   m_period = period;
 
   m_controlLoop->StartPeriodic(m_period);
@@ -76,7 +68,7 @@ Motor3PIDController::Motor3PIDController(double Kp, double Ki, double Kd, double
   HAL_Report(HALUsageReporting::kResourceType_PIDController, instances);
 }
 
-Motor3PIDController::~Motor3PIDController() {
+DoublePIDController::~DoublePIDController() {
   // forcefully stopping the notifier so the callback can successfully run.
   m_controlLoop->Stop();
 }
@@ -85,46 +77,29 @@ Motor3PIDController::~Motor3PIDController() {
  * Read the input, calculate the output accordingly, and write to the output.
  * This should only be called by the Notifier.
  */
-void Motor3PIDController::Calculate() {
+void DoublePIDController::Calculate() {
   bool enabled;
-  PIDSource* pidInput;
+  double pidInput;
   PIDOutput* pidOutput;
-  PIDOutput* pidOutput1;
-  PIDOutput* pidOutput2;
-  PIDOutput* pidOutput3;
-  PIDOutput* pidOutput4;
-  PIDOutput* pidOutput5;
+
   {
     std::lock_guard<priority_recursive_mutex> sync(m_mutex);
     pidInput = m_pidInput;
     pidOutput = m_pidOutput;
-    pidOutput1 = m_pidOutput1;
-    pidOutput2 = m_pidOutput2;
-    pidOutput3 = m_pidOutput3;
-    pidOutput4 = m_pidOutput4;
-    pidOutput5 = m_pidOutput5;
     enabled = m_enabled;
   }
-  if (pidOutput == nullptr){return;}
-  if (pidOutput1 == nullptr){return;}
-  if (pidOutput2 == nullptr){return;}
-  if (pidOutput3 == nullptr){return;}
-  if (pidOutput4 == nullptr){return;}
-  if (pidOutput5 == nullptr){return;}
+
+  if (pidOutput == nullptr) return;
+
   if (enabled) {
     std::lock_guard<priority_recursive_mutex> sync(m_mutex);
-    double input = pidInput->PIDGet();
+    double input = pidInput;
     double result;
     PIDOutput* pidOutput;
-	PIDOutput* pidOutput1;
-	PIDOutput* pidOutput2;
-    PIDOutput* pidOutput3;
-	PIDOutput* pidOutput4;
-	PIDOutput* pidOutput5;
 
     m_error = GetContinuousError(m_setpoint - input);
 
-    if (false) {
+    if (true) {
       if (m_P != 0) {
         double potentialPGain = (m_totalError + m_error) * m_P;
         if (potentialPGain < m_maximumOutput) {
@@ -162,18 +137,9 @@ void Motor3PIDController::Calculate() {
       m_result = m_minimumOutput;
 
     pidOutput = m_pidOutput;
-    pidOutput1 = m_pidOutput1;
-    pidOutput2 = m_pidOutput2;
-    pidOutput3 = m_pidOutput3;
-    pidOutput4 = m_pidOutput4;
-    pidOutput5 = m_pidOutput5;
     result = m_result;
+
     pidOutput->PIDWrite(result);
-	pidOutput1->PIDWrite(result);
-	pidOutput2->PIDWrite(result);
-    pidOutput3->PIDWrite(result);
-	pidOutput4->PIDWrite(result);
-	pidOutput5->PIDWrite(result);
     // Update the buffer.
     m_buf.push(m_error);
     m_bufTotal += m_error;
@@ -200,7 +166,7 @@ void Motor3PIDController::Calculate() {
  * output measured in setpoint units per this controller's update period (see
  * the default period in this class's constructor).
  */
-double Motor3PIDController::CalculateFeedForward() {
+double DoublePIDController::CalculateFeedForward() {
   if (true) {
     return m_F * GetSetpoint();
   } else {
@@ -220,7 +186,7 @@ double Motor3PIDController::CalculateFeedForward() {
  * @param i Integral coefficient
  * @param d Differential coefficient
  */
-void Motor3PIDController::SetPID(double p, double i, double d) {
+void DoublePIDController::SetPID(double p, double i, double d) {
   {
     std::lock_guard<priority_recursive_mutex> sync(m_mutex);
     m_P = p;
@@ -239,7 +205,7 @@ void Motor3PIDController::SetPID(double p, double i, double d) {
  * @param d Differential coefficient
  * @param f Feed forward coefficient
  */
-void Motor3PIDController::SetPID(double p, double i, double d, double f) {
+void DoublePIDController::SetPID(double p, double i, double d, double f) {
   {
     std::lock_guard<priority_recursive_mutex> sync(m_mutex);
     m_P = p;
@@ -255,7 +221,7 @@ void Motor3PIDController::SetPID(double p, double i, double d, double f) {
  *
  * @return proportional coefficient
  */
-double Motor3PIDController::GetP() const {
+double DoublePIDController::GetP() const {
   std::lock_guard<priority_recursive_mutex> sync(m_mutex);
   return m_P;
 }
@@ -265,7 +231,7 @@ double Motor3PIDController::GetP() const {
  *
  * @return integral coefficient
  */
-double Motor3PIDController::GetI() const {
+double DoublePIDController::GetI() const {
   std::lock_guard<priority_recursive_mutex> sync(m_mutex);
   return m_I;
 }
@@ -275,7 +241,7 @@ double Motor3PIDController::GetI() const {
  *
  * @return differential coefficient
  */
-double Motor3PIDController::GetD() const {
+double DoublePIDController::GetD() const {
   std::lock_guard<priority_recursive_mutex> sync(m_mutex);
   return m_D;
 }
@@ -285,7 +251,7 @@ double Motor3PIDController::GetD() const {
  *
  * @return Feed forward coefficient
  */
-double Motor3PIDController::GetF() const {
+double DoublePIDController::GetF() const {
   std::lock_guard<priority_recursive_mutex> sync(m_mutex);
   return m_F;
 }
@@ -297,7 +263,7 @@ double Motor3PIDController::GetF() const {
  *
  * @return the latest calculated output
  */
-double Motor3PIDController::Get() const {
+double DoublePIDController::Get() const {
   std::lock_guard<priority_recursive_mutex> sync(m_mutex);
   return m_result;
 }
@@ -311,7 +277,7 @@ double Motor3PIDController::Get() const {
  *
  * @param continuous true turns on continuous, false turns off continuous
  */
-void Motor3PIDController::SetContinuous(bool continuous) {
+void DoublePIDController::SetContinuous(bool continuous) {
   std::lock_guard<priority_recursive_mutex> sync(m_mutex);
   m_continuous = continuous;
 }
@@ -322,7 +288,7 @@ void Motor3PIDController::SetContinuous(bool continuous) {
  * @param minimumInput the minimum value expected from the input
  * @param maximumInput the maximum value expected from the output
  */
-void Motor3PIDController::SetInputRange(double minimumInput, double maximumInput) {
+void DoublePIDController::SetInputRange(double minimumInput, double maximumInput) {
   {
     std::lock_guard<priority_recursive_mutex> sync(m_mutex);
     m_minimumInput = minimumInput;
@@ -338,7 +304,7 @@ void Motor3PIDController::SetInputRange(double minimumInput, double maximumInput
  * @param minimumOutput the minimum value to write to the output
  * @param maximumOutput the maximum value to write to the output
  */
-void Motor3PIDController::SetOutputRange(double minimumOutput, double maximumOutput) {
+void DoublePIDController::SetOutputRange(double minimumOutput, double maximumOutput) {
   std::lock_guard<priority_recursive_mutex> sync(m_mutex);
   m_minimumOutput = minimumOutput;
   m_maximumOutput = maximumOutput;
@@ -351,7 +317,7 @@ void Motor3PIDController::SetOutputRange(double minimumOutput, double maximumOut
  *
  * @param setpoint the desired setpoint
  */
-void Motor3PIDController::SetSetpoint(double setpoint) {
+void DoublePIDController::SetSetpoint(double setpoint) {
   {
     std::lock_guard<priority_recursive_mutex> sync(m_mutex);
 
@@ -377,7 +343,7 @@ void Motor3PIDController::SetSetpoint(double setpoint) {
  *
  * @return the current setpoint
  */
-double Motor3PIDController::GetSetpoint() const {
+double DoublePIDController::GetSetpoint() const {
   std::lock_guard<priority_recursive_mutex> sync(m_mutex);
   return m_setpoint;
 }
@@ -387,7 +353,7 @@ double Motor3PIDController::GetSetpoint() const {
  *
  * @return the change in setpoint over time
  */
-double Motor3PIDController::GetDeltaSetpoint() const {
+double DoublePIDController::GetDeltaSetpoint() const {
   std::lock_guard<priority_recursive_mutex> sync(m_mutex);
   return (m_setpoint - m_prevSetpoint) / m_setpointTimer.Get();
 }
@@ -397,26 +363,26 @@ double Motor3PIDController::GetDeltaSetpoint() const {
  *
  * @return the current error
  */
-double Motor3PIDController::GetError() const {
+double DoublePIDController::GetError() const {
   double setpoint = GetSetpoint();
   {
     std::lock_guard<priority_recursive_mutex> sync(m_mutex);
-    return GetContinuousError(setpoint - m_pidInput->PIDGet());
+    return GetContinuousError(setpoint - m_pidInput);
   }
 }
 
 /**
  * Sets what type of input the PID controller will use.
  */
-void Motor3PIDController::SetPIDSourceType(PIDSourceType pidSource) {
+void DoublePIDController::SetPIDSourceType(PIDSourceType pidSource) {
 }
 /**
  * Returns the type of input the PID controller is using.
  *
  * @return the PID controller input type
  */
-PIDSourceType Motor3PIDController::GetPIDSourceType() const {
-  return PIDSourceType::kDisplacement;
+PIDSourceType DoublePIDController::GetPIDSourceType() const {
+  return PIDSourceType::kRate;
 }
 
 /**
@@ -427,7 +393,7 @@ PIDSourceType Motor3PIDController::GetPIDSourceType() const {
  *
  * @return the average error
  */
-double Motor3PIDController::GetAvgError() const {
+double DoublePIDController::GetAvgError() const {
   double avgError = 0;
   {
     std::lock_guard<priority_recursive_mutex> sync(m_mutex);
@@ -443,7 +409,7 @@ double Motor3PIDController::GetAvgError() const {
  *
  * @param percentage error which is tolerable
  */
-void Motor3PIDController::SetTolerance(double percent) {
+void DoublePIDController::SetTolerance(double percent) {
   std::lock_guard<priority_recursive_mutex> sync(m_mutex);
   m_toleranceType = kPercentTolerance;
   m_tolerance = percent;
@@ -455,7 +421,7 @@ void Motor3PIDController::SetTolerance(double percent) {
  *
  * @param percentage error which is tolerable
  */
-void Motor3PIDController::SetAbsoluteTolerance(double absTolerance) {
+void DoublePIDController::SetAbsoluteTolerance(double absTolerance) {
   std::lock_guard<priority_recursive_mutex> sync(m_mutex);
   m_toleranceType = kAbsoluteTolerance;
   m_tolerance = absTolerance;
@@ -467,7 +433,7 @@ void Motor3PIDController::SetAbsoluteTolerance(double absTolerance) {
  *
  * @param percentage error which is tolerable
  */
-void Motor3PIDController::SetPercentTolerance(double percent) {
+void DoublePIDController::SetPercentTolerance(double percent) {
   std::lock_guard<priority_recursive_mutex> sync(m_mutex);
   m_toleranceType = kPercentTolerance;
   m_tolerance = percent;
@@ -483,7 +449,7 @@ void Motor3PIDController::SetPercentTolerance(double percent) {
  *
  * @param bufLength Number of previous cycles to average. Defaults to 1.
  */
-void Motor3PIDController::SetToleranceBuffer(int bufLength) {
+void DoublePIDController::SetToleranceBuffer(int bufLength) {
   std::lock_guard<priority_recursive_mutex> sync(m_mutex);
   m_bufLength = bufLength;
 
@@ -505,7 +471,7 @@ void Motor3PIDController::SetToleranceBuffer(int bufLength) {
  *
  * This will return false until at least one input value has been computed.
  */
-bool Motor3PIDController::OnTarget() const {
+bool DoublePIDController::OnTarget() const {
   std::lock_guard<priority_recursive_mutex> sync(m_mutex);
   if (m_buf.size() == 0) return false;
   double error = GetAvgError();
@@ -526,7 +492,7 @@ bool Motor3PIDController::OnTarget() const {
 /**
  * Begin running the PIDController.
  */
-void Motor3PIDController::Enable() {
+void DoublePIDController::Enable() {
   {
     std::lock_guard<priority_recursive_mutex> sync(m_mutex);
     m_enabled = true;
@@ -536,7 +502,7 @@ void Motor3PIDController::Enable() {
 /**
  * Stop running the PIDController, this sets the output to zero before stopping.
  */
-void Motor3PIDController::Disable() {
+void DoublePIDController::Disable() {
   {
     std::lock_guard<priority_recursive_mutex> sync(m_mutex);
     m_pidOutput->PIDWrite(0);
@@ -548,7 +514,7 @@ void Motor3PIDController::Disable() {
 /**
  * Return true if PIDController is enabled.
  */
-bool Motor3PIDController::IsEnabled() const {
+bool DoublePIDController::IsEnabled() const {
   std::lock_guard<priority_recursive_mutex> sync(m_mutex);
   return m_enabled;
 }
@@ -556,7 +522,7 @@ bool Motor3PIDController::IsEnabled() const {
 /**
  * Reset the previous error, the integral term, and disable the controller.
  */
-void Motor3PIDController::Reset() {
+void DoublePIDController::Reset() {
   Disable();
 
   std::lock_guard<priority_recursive_mutex> sync(m_mutex);
@@ -573,7 +539,7 @@ void Motor3PIDController::Reset() {
  * @param error The current error of the PID controller.
  * @return Error for continuous inputs.
  */
-double Motor3PIDController::GetContinuousError(double error) const {
+double DoublePIDController::GetContinuousError(double error) const {
   if (m_continuous) {
     if (std::fabs(error) > (m_maximumInput - m_minimumInput) / 2) {
       if (error > 0) {

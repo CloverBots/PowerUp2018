@@ -36,20 +36,18 @@ class PIDOutput;
  * in the integral and derivative calculations. Therefore, the sample rate
  * affects the controller's behavior for a given set of PID constants.
  */
-class Motor3PIDController :
+class DoublePIDController :
                       public PIDInterface
 					  {
  public:
-	Motor3PIDController(double p, double i, double d, PIDSource* source,
-                PIDOutput* output, PIDOutput* output1, PIDOutput* output2,
-				PIDOutput* output3, PIDOutput* output4, PIDOutput* output5, double period = 0.05);
-	Motor3PIDController(double p, double i, double d, double f, PIDSource* source,
-                PIDOutput* output, PIDOutput* output1, PIDOutput* output2,
-				PIDOutput* output3, PIDOutput* output4, PIDOutput* output5, double period = 0.05);
-  virtual ~Motor3PIDController();
+	DoublePIDController(double p, double i, double d, double source,
+                PIDOutput* output, double period = 0.05);
+	DoublePIDController(double p, double i, double d, double f, double source,
+                PIDOutput* output, double period = 0.05);
+  virtual ~DoublePIDController();
 
-  Motor3PIDController(const Motor3PIDController&) = delete;
-  Motor3PIDController& operator=(const Motor3PIDController) = delete;
+  DoublePIDController(const DoublePIDController&) = delete;
+  DoublePIDController& operator=(const DoublePIDController) = delete;
 
   virtual double Get() const;
   virtual void SetContinuous(bool continuous = true);
@@ -85,13 +83,8 @@ class Motor3PIDController :
   void Reset() override;
 
  protected:
-  PIDSource* m_pidInput;
+  double m_pidInput;
   PIDOutput* m_pidOutput;
-  PIDOutput* m_pidOutput1;
-  PIDOutput* m_pidOutput2;
-  PIDOutput* m_pidOutput3;
-  PIDOutput* m_pidOutput4;
-  PIDOutput* m_pidOutput5;
   virtual void Calculate();
   virtual double CalculateFeedForward();
   double GetContinuousError(double error) const;

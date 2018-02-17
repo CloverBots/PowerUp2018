@@ -11,7 +11,7 @@ class OI {
 public:
 	const static int CAMERA_X_RES = 160;
 	const static int CAMERA_Y_RES = 120;
-	cs::UsbCamera m_Camera;
+	//cs::UsbCamera m_Camera;
 	Joystick* pDriveStick;
 	Joystick* pOperatorStick;
 	JoystickButton* Rbumper;

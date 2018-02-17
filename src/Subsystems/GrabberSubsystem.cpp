@@ -1,10 +1,11 @@
 #include "GrabberSubsystem.h"
 #include "../RobotMap.h"
 #include <WPILib.h>
+#include <ctre/Phoenix.h>
 
 GrabberSubsystem::GrabberSubsystem() : Subsystem("ExampleSubsystem") {
-	Grabber_Motor_Right = new Talon (RobotMap::GRABBER_MOTOR_RIGHT);
-	Grabber_Motor_Left = new Talon (RobotMap::GRABBER_MOTOR_LEFT);
+	Grabber_Motor_Right = new WPI_VictorSPX(RobotMap::GRABBER_MOTOR_RIGHT);
+	Grabber_Motor_Left = new WPI_VictorSPX(RobotMap::GRABBER_MOTOR_LEFT);
 }
 
 void GrabberSubsystem::InitDefaultCommand() {

@@ -18,7 +18,8 @@ void Rotate::Execute()
 // Make this return true when this Command no longer needs to run execute()
 bool Rotate::IsFinished()
 {
-	if(abs(m_targetAngle - CommandBase::driveSubsystem->GetLeftDistance()) < .1)
+	if(false)
+//	if(abs(m_targetAngle - CommandBase::driveSubsystem->GetLeftDistance()) < .1)
 	{
 		return true;
 	}else{

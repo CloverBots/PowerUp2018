@@ -1,5 +1,6 @@
 #include "DriveDistance.h"
 #include "CommandBase.h"
+#include <iostream>
 DriveDistance::DriveDistance(double distance) : Distance(distance){
 	// Use Requires() here to declare subsystem dependencies
 	// eg. Requires(Robot::chassis.get());
@@ -17,8 +18,15 @@ void DriveDistance::Execute() {
 
 // Make this return true when this Command no longer needs to run execute()
 bool DriveDistance::IsFinished() {
-	if((abs(Distance - CommandBase::driveSubsystem->GetLeftDistance()) < .1) &
-			(abs(Distance - CommandBase::driveSubsystem->GetRightDistance()) < .1)){
+//std::cout << abs(Distance - CommandBase::driveSubsystem->GetLeftDistance()) << std::endl;
+//	if(((abs(Distance - CommandBase::driveSubsystem->GetLeftDistance()) > 10) & (abs(Distance - CommandBase::driveSubsystem->GetLeftDistance()) < 10)) & ((abs(Distance - CommandBase::driveSubsystem->GetRightDistance()) > 10) & (abs(Distance - CommandBase::driveSubsystem->GetRightDistance()) < 10))){
+//	if(abs(Distance - CommandBase::driveSubsystem->GetLeftDistance()) == 0)
+	if(CommandBase::driveSubsystem->OnTarget())
+	{
+		CommandBase::driveSubsystem->SetDrivePIDEnabled(false);
+		CommandBase::driveSubsystem->SetRotatePIDEnabled(false);
+		CommandBase::driveSubsystem->Drive(0,0);
+		std::cout << "DONE!" << std::endl;
 		return true;
 	}else{
 		return false;
@@ -28,10 +36,14 @@ bool DriveDistance::IsFinished() {
 // Called once after isFinished returns true
 void DriveDistance::End() {
 	//CommandBase::driveSubsystem->Drive(0.0f, 0.0f);
+	CommandBase::driveSubsystem->SetDrivePIDEnabled(false);
+	CommandBase::driveSubsystem->SetRotatePIDEnabled(false);
+	CommandBase::driveSubsystem->Drive(0.0f, 0.0f);
 }
 
 // Called when another command which requires one or more of the same
 // subsystems is scheduled to run
 void DriveDistance::Interrupted() {
-
+	CommandBase::driveSubsystem->SetDrivePIDEnabled(false);
+	CommandBase::driveSubsystem->SetRotatePIDEnabled(false);
 }

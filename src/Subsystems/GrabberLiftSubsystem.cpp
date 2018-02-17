@@ -1,20 +1,18 @@
 #include "GrabberLiftSubsystem.h"
 #include "../RobotMap.h"
 #include "WPILib.h"
+#include "DoublePIDController.h"
+#include <ctre/Phoenix.h>
 
 GrabberLiftSubsystem::GrabberLiftSubsystem() : Subsystem("GrabberLiftSubsystem")
 {
-	GrabberMotor = new Talon(RobotMap::GRABBER_LIFT_MOTOR);
-	GrabberLiftEncoder = new Encoder(0, 1, false, Encoder::EncodingType::k4X);
-	GrabberLiftEncoder->SetMaxPeriod(.1);
-	GrabberLiftEncoder->SetMinRate(10);
-	GrabberLiftEncoder->SetDistancePerPulse(5);
-	GrabberLiftEncoder->SetReverseDirection(true);
-	GrabberLiftEncoder->SetSamplesToAverage(7);
-	GrabberLiftEncoder->Reset();
+	speed = 0;
+	distance = 0;
+	GrabberMotor = new WPI_VictorSPX(RobotMap::GRABBER_LIFT_MOTOR);
+	GrabberMotor->ConfigSelectedFeedbackSensor(phoenix::motorcontrol::FeedbackDevice::QuadEncoder, 0, 0);
 	Upper = new DigitalInput(0);
 	Lower = new DigitalInput(1);
-	GrabberLiftPID = new PIDController(m_P, m_I, m_D, GrabberLiftEncoder, GrabberMotor);
+	GrabberLiftPID = new DoublePIDController(m_P, m_I, m_D, speed, GrabberMotor);
 
 }
 
@@ -31,7 +29,8 @@ void GrabberLiftSubsystem::SetSpeed(double speed)
 
 double GrabberLiftSubsystem::GetDistance()
 {
-	return GrabberLiftEncoder->GetDistance();
+	return 	distance += ((GrabberMotor->GetSelectedSensorPosition(0) * m_EncScaler)) / 360;
+	return distance;
 }
 
 bool GrabberLiftSubsystem::GetUpper()
@@ -64,5 +63,6 @@ void GrabberLiftSubsystem::SetPID(bool enabled, double setpoint)
 	SetPIDEnabled(enabled);
 	GrabberLiftPID->SetSetpoint(setpoint);
 }
+
 // Put methods for controlling this subsystem
 // here. Call these from Commands.

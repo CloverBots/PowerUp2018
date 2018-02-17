@@ -4,29 +4,30 @@
 #include <Commands/Subsystem.h>
 #include <Motor3PIDController.h>
 #include <RotatePIDController.h>
+#include <ctre/Phoenix.h>
+#include "../EncPIDSource.h"
 
 class DriveSubsystem : public Subsystem {
 private:
-	const float m_DriveP = 0.75f;
-	const float m_DriveI = 0.175f;
+	const float m_WheelDiameter = 6;
+	const float m_WheelCircumference = m_WheelDiameter * M_PI;
+	const float m_EncScaler = 2.8444;
+	const float m_DriveP = 0.015f;
+	const float m_DriveI = 0.000f;
 	const float m_DriveD = 0.0f;
-	const float m_RotateP = 0.75f;
-	const float m_RotateI = 0.175f;
+	const float m_RotateP = 0.0f;
+	const float m_RotateI = 0.0f;
 	const float m_RotateD = 0.0f;
-	// It's desirable that everything possible under private except
-	// for methods that implement subsystem capabilities
-	Talon* Front_Right_Motor;
-	Talon* Front_Left_Motor;
-	Talon* Middle_Right_Motor;
-	Talon* Middle_Left_Motor;
-	Talon* Back_Right_Motor;
-	Talon* Back_Left_Motor;
+	EncPIDSource* Output;
+	WPI_TalonSRX* Front_Right_Motor;
+	WPI_TalonSRX* Front_Left_Motor;
+	WPI_TalonSRX* Middle_Right_Motor;
+	WPI_TalonSRX* Middle_Left_Motor;
+	WPI_TalonSRX* Back_Right_Motor;
+	WPI_TalonSRX* Back_Left_Motor;
 	DoubleSolenoid* Gear_Box;
-	Encoder* LeftEncoder;
-	Encoder* RightEncoder;
-	AnalogGyro* m_gyro;
-	Motor3PIDController* RightPID;
-	Motor3PIDController* LeftPID;
+	ADXRS450_Gyro* m_gyro;
+	Motor3PIDController* PID;
 	RotatePIDController* RotatePID;
 
 public:
@@ -34,8 +35,6 @@ public:
 	void Drive(double speed, double turn);
 	void Shift(DoubleSolenoid::Value value);
 	void InitDefaultCommand();
-	double GetLeftDistance();
-	double GetRightDistance();
 	void LeftReset();
 	void RightReset();
 	void ResetGyro();
@@ -44,6 +43,7 @@ public:
 	void SetRotatePIDEnabled(bool enabled);
 	void SetDrive(bool enabled, double setpoint);
 	void SetRotate(bool enabled, double setpoint);
+	bool OnTarget();
 };
 
 
