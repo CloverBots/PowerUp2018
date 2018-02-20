@@ -1,9 +1,11 @@
 #include "Grabber.h"
 #include <WPILib.h>
 #include "CommandBase.h"
-Grabber::Grabber(double speed) : speed(speed)
+#include <iostream>
+Grabber::Grabber()
 {
-	Requires (CommandBase::grabber.get());
+	speed = 0;
+	Requires(CommandBase::grabber.get());
 	// Use Requires() here to declare subsystem dependencies
 	// eg. Requires(Robot::chassis.get());
 }
@@ -11,6 +13,32 @@ Grabber::Grabber(double speed) : speed(speed)
 // Called just before this Command runs the first time
 void Grabber::Initialize()
 {
+	Joystick* pDriveStick;
+	pDriveStick = new Joystick(0);
+	Joystick* pOperatorStick;
+	pOperatorStick = new Joystick(1);
+	JoystickButton* BackButton;
+	JoystickButton* StartButton;
+	BackButton = new JoystickButton(pOperatorStick, 7);
+	StartButton = new JoystickButton(pOperatorStick, 8);
+	//if(pDriveStick->GetRawAxis(4) != 0 & (!BackButton->Get() || !StartButton->Get()))
+	//{
+
+	//}
+	//else
+	//{
+		if(StartButton->Get())
+		{
+			speed = 1;
+		}
+		else if(BackButton->Get())
+		{
+			speed = -1;
+		}else
+		{
+			speed = 0;
+		}
+	//}
 	CommandBase::grabber->SetGrabberSpeed(speed);
 }
 

@@ -5,6 +5,7 @@
 #include "WPILib.h"
 class DriveDistance : public CommandBase {
 	double Distance;
+	bool half = false;
 public:
 	DriveDistance(double distance); //inches
 	void Initialize();

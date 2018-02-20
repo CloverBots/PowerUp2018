@@ -25,7 +25,7 @@ DriveSubsystem::DriveSubsystem() : Subsystem("driveSubsystem") {
 	 	RotatePID = new RotatePIDController(m_RotateP, m_RotateI, m_RotateD, m_gyro, Front_Left_Motor, Middle_Left_Motor, Back_Left_Motor, Front_Right_Motor, Middle_Right_Motor, Back_Right_Motor);
 		PID->SetOutputRange(-1,1);
 		PID->SetPIDSourceType(PIDSourceType::kDisplacement);
-		PID->SetTolerance(10);
+		PID->SetTolerance(1);
 }
 
 void DriveSubsystem::InitDefaultCommand()
@@ -55,6 +55,11 @@ void DriveSubsystem::ResetGyro()
 	m_gyro->Reset();
 }
 
+void DriveSubsystem::ResetDrive()
+{
+	Output->Reset();
+}
+
 double DriveSubsystem::GetGyroAngle()
 {
 	return m_gyro->GetAngle();
@@ -62,6 +67,7 @@ double DriveSubsystem::GetGyroAngle()
 
 void DriveSubsystem::SetDrivePIDEnabled(bool enabled)
 {
+
 	PID->SetSetpoint(0.0f);
 	Drive(0, 0);
 	PID->Reset();
@@ -95,4 +101,30 @@ void DriveSubsystem::SetRotate(bool enabled, double setpoint)
 bool DriveSubsystem::OnTarget()
 {
 	return PID->OnTarget();
+}
+
+void DriveSubsystem::SetPID(double P, double I, double D)
+{
+	m_DriveP = P;
+	m_DriveI = I;
+	m_DriveD = D;
+	PID->SetPID(P, I, D);
+}
+
+void DriveSubsystem::UpdateFromSmartDashboard()
+{
+	SetPID(
+			(float)SmartDashboard::GetNumber("Drive P", 0.0),
+			(float)SmartDashboard::GetNumber("Drive I", 0.0),
+			(float)SmartDashboard::GetNumber("Drive D", 0.0));
+
+}
+
+double DriveSubsystem::GetDistance()
+{
+	DistanceRight += (Middle_Right_Motor->GetSelectedSensorPosition(0) / 54.3702 / 21.6 - DistanceOldRight);
+	DistanceOldRight = DistanceRight;
+	DistanceLeft += (Back_Left_Motor->GetSelectedSensorPosition(0) / 54.3702 / 21.6 - DistanceOldLeft);
+	DistanceOldLeft = DistanceLeft;
+	return (DistanceRight + DistanceLeft) / 2;
 }

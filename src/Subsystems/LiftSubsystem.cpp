@@ -15,9 +15,10 @@ void LiftSubsystem::InitDefaultCommand() {
 	// SetDefaultCommand(new MySpecialCommand());
 }
 
-void LiftSubsystem::SetSpeed(double speed) {
-	Lift_Motor_Right->Set(speed);
-	Lift_Motor_Right->Set(speed);
+void LiftSubsystem::SetSpeed(double liftspeed, double minispeed) {
+	Lift_Motor_Right->Set(liftspeed);
+	Lift_Motor_Left->Set(liftspeed);
+	Lift_Motor_Up->Set(minispeed);
 	/*
 	if(speed > 0)
 	{

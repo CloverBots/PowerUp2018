@@ -23,6 +23,7 @@ private:
 	float DistanceOldLeft = 0;
 public:
 	EncPIDSource(WPI_TalonSRX* pTalonRight, WPI_TalonSRX* pTalonLeft);
+	void Reset();
 	virtual ~EncPIDSource();
 
 	virtual double PIDGet();

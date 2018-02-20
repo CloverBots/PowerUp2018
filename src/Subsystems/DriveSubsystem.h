@@ -9,12 +9,16 @@
 
 class DriveSubsystem : public Subsystem {
 private:
+	float DistanceRight = 0;
+	float DistanceLeft = 0;
+	float DistanceOldRight = 0;
+	float DistanceOldLeft = 0;
 	const float m_WheelDiameter = 6;
 	const float m_WheelCircumference = m_WheelDiameter * M_PI;
 	const float m_EncScaler = 2.8444;
-	const float m_DriveP = 0.015f;
-	const float m_DriveI = 0.000f;
-	const float m_DriveD = 0.0f;
+	float m_DriveP = 0.0055f;
+	float m_DriveI = 0.0f;//0.000075f;
+	float m_DriveD = 0.0f;
 	const float m_RotateP = 0.0f;
 	const float m_RotateI = 0.0f;
 	const float m_RotateD = 0.0f;
@@ -35,15 +39,17 @@ public:
 	void Drive(double speed, double turn);
 	void Shift(DoubleSolenoid::Value value);
 	void InitDefaultCommand();
-	void LeftReset();
-	void RightReset();
 	void ResetGyro();
+	void ResetDrive();
+	double GetDistance();
 	double GetGyroAngle();
 	void SetDrivePIDEnabled(bool enabled);
 	void SetRotatePIDEnabled(bool enabled);
 	void SetDrive(bool enabled, double setpoint);
 	void SetRotate(bool enabled, double setpoint);
 	bool OnTarget();
+	void SetPID(double P, double I, double D);
+	void UpdateFromSmartDashboard();
 };
 
 

@@ -3,17 +3,18 @@
 
 #include "../CommandBase.h"
 #include "WPILib.h"
-
 class GrabberLift : public CommandBase {
 public:
-	GrabberLift(double SetPoint);
+	double Speed = 0;
+	double SetPoint = 0;
+	const double MAX_SPEED = .5;
+	GrabberLift();
 	void Initialize();
 	void Execute();
 	bool IsFinished();
 	void End();
 	void Interrupted();
 private:
-	double SetPoint;
 };
 
 #endif  // GrabberLift_H

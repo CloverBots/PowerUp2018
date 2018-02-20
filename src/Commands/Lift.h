@@ -4,12 +4,13 @@
 
 class Lift : public CommandBase {
 public:
-	Lift(double speed);
+	Lift(double liftspeed, double minispeed);
 	void Initialize();
 	void Execute();
 	bool IsFinished();
 	void End();
 	void Interrupted();
 private:
-	double speed;
+	double liftspeed;
+	double minispeed;
 };

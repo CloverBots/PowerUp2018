@@ -9,18 +9,16 @@ DriveDistance::DriveDistance(double distance) : Distance(distance){
 
 // Called just before this Command runs the first time
 void DriveDistance::Initialize() {
+	CommandBase::driveSubsystem->UpdateFromSmartDashboard();
 	CommandBase::driveSubsystem->SetDrive(true, Distance);
 }
 
 // Called repeatedly when this Command is scheduled to run
 void DriveDistance::Execute() {
 }
-
+//.009,.00001
 // Make this return true when this Command no longer needs to run execute()
 bool DriveDistance::IsFinished() {
-//std::cout << abs(Distance - CommandBase::driveSubsystem->GetLeftDistance()) << std::endl;
-//	if(((abs(Distance - CommandBase::driveSubsystem->GetLeftDistance()) > 10) & (abs(Distance - CommandBase::driveSubsystem->GetLeftDistance()) < 10)) & ((abs(Distance - CommandBase::driveSubsystem->GetRightDistance()) > 10) & (abs(Distance - CommandBase::driveSubsystem->GetRightDistance()) < 10))){
-//	if(abs(Distance - CommandBase::driveSubsystem->GetLeftDistance()) == 0)
 	if(CommandBase::driveSubsystem->OnTarget())
 	{
 		CommandBase::driveSubsystem->SetDrivePIDEnabled(false);

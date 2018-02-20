@@ -15,7 +15,7 @@ private:
 	// for methods that implement subsystem capabilities
 public:
 	LiftSubsystem();
-	void SetSpeed(double speed);
+	void SetSpeed(double liftspeed, double minispeed);
 	void InitDefaultCommand();
 };
 

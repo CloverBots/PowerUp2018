@@ -7,7 +7,7 @@ class Grabber : public CommandBase {
 private:
 	double speed;
 public:
-	Grabber(double speed);
+	Grabber();
 	void Initialize();
 	void Execute();
 	bool IsFinished();

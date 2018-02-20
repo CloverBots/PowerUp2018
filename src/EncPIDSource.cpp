@@ -28,3 +28,13 @@ double EncPIDSource::PIDGet()
 	std::cout << (DistanceRight + DistanceLeft) / 2 << std::endl;
 	return (DistanceRight + DistanceLeft) / 2;
 }
+
+void EncPIDSource::Reset()
+{
+	DistanceLeft = 0;
+	DistanceRight = 0;
+	DistanceOldLeft = 0;
+	DistanceOldRight = 0;
+	m_pTalonLeft->GetSensorCollection().SetQuadraturePosition(0, 10);
+	m_pTalonRight->GetSensorCollection().SetQuadraturePosition(0, 10);
+}

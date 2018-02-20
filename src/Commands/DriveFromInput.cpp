@@ -15,6 +15,7 @@ void DriveFromInput::Initialize() {
 
 // Called repeatedly when this Command is scheduled to run
 void DriveFromInput::Execute() {
+
 	Joystick* pDriveStick = CommandBase::oi->GetDriveStick();
 	CommandBase::driveSubsystem->Drive(
 			pDriveStick->GetRawAxis(1),

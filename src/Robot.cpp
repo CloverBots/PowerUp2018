@@ -29,6 +29,9 @@ public:
 		m_chooser.AddObject("DriveToSwtichForwardRight", new DriveForwardAuto);
 		m_chooser.AddObject("DriveToSwtichForwardLeft", new DriveForwardAuto);
 		frc::SmartDashboard::PutData("Auto Chooser" , &m_chooser);
+		frc::SmartDashboard::PutNumber("Drive P", 0.0);
+		frc::SmartDashboard::PutNumber("Drive I", 0.0);
+		frc::SmartDashboard::PutNumber("Drive D", 0.0);
 	}
 
 	/**
@@ -59,6 +62,7 @@ public:
 	 * to the if-else structure below with additional strings & commands.
 	 */
 	void AutonomousInit() override {
+		CommandBase::driveSubsystem->ResetDrive();
 		c->Start();
 		autonomousCommand.reset(m_chooser.GetSelected());
 		if(m_chooser.GetSelected()->GetName() == "DriveToSwitch")
@@ -112,6 +116,7 @@ public:
 	}
 
 	void TeleopInit() override {
+		CommandBase::grabberLiftSubsystem->Reset();
 		CommandBase::driveSubsystem->SetDrivePIDEnabled(false);
 		CommandBase::driveSubsystem->SetRotatePIDEnabled(false);
 		c->Start();

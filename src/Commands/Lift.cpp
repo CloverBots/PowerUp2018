@@ -1,6 +1,6 @@
 #include "Lift.h"
 #include "CommandBase.h"
-Lift::Lift(double speed) : speed(speed) {
+Lift::Lift(double liftspeed, double minispeed) : liftspeed(liftspeed) , minispeed(minispeed) {
 	Requires(CommandBase::lift.get());
 	// Use Requires() here to declare subsystem dependencies
 	// eg. Requires(Robot::chassis.get());
@@ -8,7 +8,7 @@ Lift::Lift(double speed) : speed(speed) {
 
 // Called just before this Command runs the first time
 void Lift::Initialize() {
-	CommandBase::lift->SetSpeed(speed);
+	CommandBase::lift->SetSpeed(liftspeed, minispeed);
 
 }
 
