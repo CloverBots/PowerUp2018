@@ -1,5 +1,6 @@
 #include "Rotate.h"
 #include "CommandBase.h"
+#include <iostream>
 Rotate::Rotate(double angle) : m_targetAngle(angle)
 {
 	Requires(CommandBase::driveSubsystem.get());
@@ -8,19 +9,21 @@ Rotate::Rotate(double angle) : m_targetAngle(angle)
 // Called just before this Command runs the first time
 void Rotate::Initialize()
 {
+	CommandBase::driveSubsystem->Shift(DoubleSolenoid::Value::kReverse);
 	CommandBase::driveSubsystem->SetRotate(true, m_targetAngle);
 }
 // Called repeatedly when this Command is scheduled to run
 void Rotate::Execute()
 {
+	//std::cout << CommandBase::driveSubsystem->GetGyroAngle() << std::endl;
 }
 
 // Make this return true when this Command no longer needs to run execute()
 bool Rotate::IsFinished()
 {
-	if(false)
-//	if(abs(m_targetAngle - CommandBase::driveSubsystem->GetLeftDistance()) < .1)
+	if(CommandBase::driveSubsystem->RotateOnTarget())
 	{
+		CommandBase::driveSubsystem->SetRotatePIDEnabled(false);
 		return true;
 	}else{
 		return false;

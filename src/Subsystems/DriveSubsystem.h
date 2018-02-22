@@ -16,12 +16,12 @@ private:
 	const float m_WheelDiameter = 6;
 	const float m_WheelCircumference = m_WheelDiameter * M_PI;
 	const float m_EncScaler = 2.8444;
-	float m_DriveP = 0.0055f;
-	float m_DriveI = 0.0f;//0.000075f;
-	float m_DriveD = 0.0f;
-	const float m_RotateP = 0.0f;
+	float m_DriveP = 0.011f;
+	float m_DriveI = 0.0f;
+	float m_DriveD = 0.1f;
+	const float m_RotateP = 0.008f;
 	const float m_RotateI = 0.0f;
-	const float m_RotateD = 0.0f;
+	const float m_RotateD = 0.01f;
 	EncPIDSource* Output;
 	WPI_TalonSRX* Front_Right_Motor;
 	WPI_TalonSRX* Front_Left_Motor;
@@ -48,6 +48,7 @@ public:
 	void SetDrive(bool enabled, double setpoint);
 	void SetRotate(bool enabled, double setpoint);
 	bool OnTarget();
+	bool RotateOnTarget();
 	void SetPID(double P, double I, double D);
 	void UpdateFromSmartDashboard();
 };

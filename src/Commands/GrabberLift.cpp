@@ -60,7 +60,6 @@ void GrabberLift::Execute()
 		SetPoint = CommandBase::grabberLiftSubsystem->GetDistance();
 	}
 
-	std::cout << SetPoint << std::endl;
 	if(SetPoint > CommandBase::grabberLiftSubsystem->GetDistance())
 	{
 		Speed = -MAX_SPEED;
@@ -77,7 +76,6 @@ void GrabberLift::Execute()
 	{
 		Speed = 0;
 	}
-	std::cout << CommandBase::grabberLiftSubsystem->GetDistance() << std::endl;
 	skip:
 	if(!CommandBase::grabberLiftSubsystem->GetUpper())
 	{

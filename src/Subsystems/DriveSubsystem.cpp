@@ -26,6 +26,9 @@ DriveSubsystem::DriveSubsystem() : Subsystem("driveSubsystem") {
 		PID->SetOutputRange(-1,1);
 		PID->SetPIDSourceType(PIDSourceType::kDisplacement);
 		PID->SetTolerance(1);
+		RotatePID->SetOutputRange(-1,1);
+		RotatePID->SetTolerance(1);
+		RotatePID->SetPIDSourceType(PIDSourceType::kDisplacement);
 }
 
 void DriveSubsystem::InitDefaultCommand()
@@ -89,12 +92,14 @@ void DriveSubsystem::SetRotatePIDEnabled(bool enabled)
 
 void DriveSubsystem::SetDrive(bool enabled, double setpoint)
 {
+	SetRotatePIDEnabled(false);
 	SetDrivePIDEnabled(enabled);
 	PID->SetSetpoint(setpoint);
 }
 void DriveSubsystem::SetRotate(bool enabled, double setpoint)
 {
-	SetDrivePIDEnabled(enabled);
+	SetDrivePIDEnabled(false);
+	SetRotatePIDEnabled(enabled);
 	RotatePID->SetSetpoint(setpoint);
 }
 
@@ -127,4 +132,9 @@ double DriveSubsystem::GetDistance()
 	DistanceLeft += (Back_Left_Motor->GetSelectedSensorPosition(0) / 54.3702 / 21.6 - DistanceOldLeft);
 	DistanceOldLeft = DistanceLeft;
 	return (DistanceRight + DistanceLeft) / 2;
+}
+
+bool DriveSubsystem::RotateOnTarget()
+{
+	return RotatePID->OnTarget();
 }

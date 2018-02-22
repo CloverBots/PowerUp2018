@@ -25,7 +25,6 @@ double EncPIDSource::PIDGet()
 	DistanceOldRight = DistanceRight;
 	DistanceLeft += (m_pTalonLeft->GetSelectedSensorPosition(0) / 54.3702 / 21.6 - DistanceOldLeft);
 	DistanceOldLeft = DistanceLeft;
-	std::cout << (DistanceRight + DistanceLeft) / 2 << std::endl;
 	return (DistanceRight + DistanceLeft) / 2;
 }
 

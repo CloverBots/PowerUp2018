@@ -16,6 +16,9 @@
 #include "Commands/DriveToSwitchForwardLeft.h"
 #include "Commands/DriveToSwitchForwardRight.h"
 #include "Commands/DriveForwardAuto.h"
+#include "Commands/Rotate.h"
+#include "Commands/DriveToSwitch.h"
+#include <iostream>
 
 class Robot : public frc::TimedRobot {
 public:
@@ -25,9 +28,10 @@ public:
 		c->Start();
 		c->SetClosedLoopControl(true);
 		m_chooser.AddDefault("DriveForward", new DriveForwardAuto);
-		m_chooser.AddObject("DriveToSwitch", new DriveForwardAuto);
-		m_chooser.AddObject("DriveToSwtichForwardRight", new DriveForwardAuto);
-		m_chooser.AddObject("DriveToSwtichForwardLeft", new DriveForwardAuto);
+		m_chooser.AddObject("DriveToSwitch", new DriveToSwitch);
+		m_chooser.AddObject("DriveToSwtichForwardRight", new DriveToSwitchForwardRight);
+		m_chooser.AddObject("DriveToSwtichForwardLeft", new DriveToSwitchForwardLeft);
+		m_chooser.AddObject("TempRotate", new Rotate(90));
 		frc::SmartDashboard::PutData("Auto Chooser" , &m_chooser);
 		frc::SmartDashboard::PutNumber("Drive P", 0.0);
 		frc::SmartDashboard::PutNumber("Drive I", 0.0);
@@ -64,50 +68,50 @@ public:
 	void AutonomousInit() override {
 		CommandBase::driveSubsystem->ResetDrive();
 		c->Start();
-		autonomousCommand.reset(m_chooser.GetSelected());
-		if(m_chooser.GetSelected()->GetName() == "DriveToSwitch")
+		autonomousCommand.reset(new DriveToSwitchForwardRight);
+		std::string gameData;
+		gameData = frc::DriverStation::GetInstance().GetGameSpecificMessage();
+
+		if(m_chooser.GetSelected() == Rotate(90))
 		{
-			std::string gameData;
-			gameData = frc::DriverStation::GetInstance().GetGameSpecificMessage();
-			if(gameData[0] == 'L')
-			{
-				autonomousCommand.reset(new DriveToSwitchAutoLeft);
-			}else if(gameData[0] == 'R')
+			std::cout << "ROTATE" <<std::endl;
+			autonomousCommand.reset(new Rotate(90));
+		}
+		if(gameData[0] == 'R')
+		{
+			std::cout << "R selected" << std::endl;
+			if(m_chooser.GetSelected() == DriveToSwitch)
 			{
 				autonomousCommand.reset(new DriveToSwitchAutoRight);
-			}else{
-
 			}
-		}else if(m_chooser.GetSelected()->GetName() == "DriveToSwitchForwardRight")
-		{
-			std::string gameData;
-			gameData = frc::DriverStation::GetInstance().GetGameSpecificMessage();
-			if(gameData[0] == 'L')
-			{
-				autonomousCommand.reset(new DriveForwardAuto);
-			}else if(gameData[0] == 'R')
+			if(m_chooser.GetSelected() == DriveToSwitchForwardRight)
 			{
 				autonomousCommand.reset(new DriveToSwitchForwardRight);
-			}else{
-
 			}
-
-		}else if(m_chooser.GetSelected()->GetName() == "DriveToSwitchForwardLeft"){
-			std::string gameData;
-			gameData = frc::DriverStation::GetInstance().GetGameSpecificMessage();
-			if(gameData[0] == 'R')
+			if(m_chooser.GetSelected() == DriveToSwitchForwardLeft)
 			{
 				autonomousCommand.reset(new DriveForwardAuto);
-			}else if(gameData[0] == 'L')
+			}
+		}
+		else
+		{
+			if(m_chooser.GetSelected() == DriveToSwitch)
+			{
+				autonomousCommand.reset(new DriveToSwitchAutoLeft);
+			}
+			if(m_chooser.GetSelected() == DriveToSwitchForwardRight)
+			{
+				autonomousCommand.reset(new DriveForwardAuto);
+			}
+			if(m_chooser.GetSelected() == DriveToSwitchForwardLeft)
 			{
 				autonomousCommand.reset(new DriveToSwitchForwardLeft);
-			}else{
+			}
+		}
 
-			}
-		}else{
-			if (autonomousCommand.get() != nullptr) {
-				autonomousCommand->Start();
-			}
+	//	autonomousCommand.reset(new DriveToSwitchForwardLeft);
+		if (autonomousCommand.get() != nullptr) {
+			autonomousCommand->Start();
 		}
 	}
 

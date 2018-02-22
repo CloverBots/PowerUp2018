@@ -6,7 +6,7 @@
 /*----------------------------------------------------------------------------*/
 
 #include "RotatePIDController.h"
-
+#include <iostream>
 #include <cmath>
 #include <vector>
 
@@ -178,9 +178,10 @@ void RotatePIDController::Calculate() {
     pidLeftOutput->PIDWrite(result);
 	pidLeftOutput1->PIDWrite(result);
 	pidLeftOutput2->PIDWrite(result);
-    pidRightOutput->PIDWrite(result);
-	pidRightOutput1->PIDWrite(result);
-	pidRightOutput2->PIDWrite(result);
+    pidRightOutput->PIDWrite(-result);
+	pidRightOutput1->PIDWrite(-result);
+	pidRightOutput2->PIDWrite(-result);
+	//std::cout << result << std::endl;
     // Update the buffer.
     m_buf.push(m_error);
     m_bufTotal += m_error;
