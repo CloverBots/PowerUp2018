@@ -8,7 +8,7 @@ GrabberLift::GrabberLift()
 {
 	Requires(CommandBase::grabberLiftSubsystem.get());
 	pOperatorStick = new Joystick(1);
-	AButton = new JoystickButton(pOperatorStick, 1);
+	AButton = new JoystickButton(pOperatorStick, 8);
 	BButton = new JoystickButton(pOperatorStick, 2);
 	XButton = new JoystickButton(pOperatorStick, 3);
 	LButton = new JoystickButton(pOperatorStick, 9);

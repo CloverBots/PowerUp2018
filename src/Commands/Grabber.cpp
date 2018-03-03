@@ -11,7 +11,7 @@ Grabber::Grabber()
 	pOperatorStick = new Joystick(1);
 	YButton = new JoystickButton(pOperatorStick, 4);
 	BackButton = new JoystickButton(pOperatorStick, 7);
-	StartButton = new JoystickButton(pOperatorStick, 8);
+	StartButton = new JoystickButton(pOperatorStick, 1);
 }
 
 // Called just before this Command runs the first time
@@ -50,7 +50,7 @@ void Grabber::Execute() {
 
 // Make this return true when this Command no longer needs to run execute()
 bool Grabber::IsFinished() {
-	return false;
+	return true;
 }
 
 // Called once after isFinished returns true

@@ -13,7 +13,7 @@
 #include <TimedRobot.h>
 #include "Commands/DriveForwardAuto.h"
 #include "Commands/Rotate.h"
-#include "Commands/CenterAuto.h"
+#include "Commands/RunCenter.h"
 #include "Commands/Left90SwitchAuto.h"
 #include "Commands/Right90SwitchAuto.h"
 #include "Commands/ScaleLeft.h"
@@ -28,7 +28,7 @@ public:
 		c->Start();
 		c->SetClosedLoopControl(true);
 		m_chooser.AddDefault("DriveForward", new DriveForwardAuto);
-		m_chooser.AddObject("Center", new CenterAuto);
+		m_chooser.AddObject("Center", new RunCenter);
 		m_chooser.AddObject("Right90Switch", new Right90SwitchAuto);
 		m_chooser.AddObject("Left90Switch", new Left90SwitchAuto);
 		m_chooser.AddObject("ScaleRight", new ScaleRight);
