@@ -8,19 +8,15 @@ Grabber::Grabber()
 	Requires(CommandBase::grabber.get());
 	// Use Requires() here to declare subsystem dependencies
 	// eg. Requires(Robot::chassis.get());
+	pOperatorStick = new Joystick(1);
+	YButton = new JoystickButton(pOperatorStick, 4);
+	BackButton = new JoystickButton(pOperatorStick, 7);
+	StartButton = new JoystickButton(pOperatorStick, 8);
 }
 
 // Called just before this Command runs the first time
 void Grabber::Initialize()
 {
-	Joystick* pDriveStick;
-	pDriveStick = new Joystick(0);
-	Joystick* pOperatorStick;
-	pOperatorStick = new Joystick(1);
-	JoystickButton* BackButton;
-	JoystickButton* StartButton;
-	BackButton = new JoystickButton(pOperatorStick, 7);
-	StartButton = new JoystickButton(pOperatorStick, 8);
 	//if(pDriveStick->GetRawAxis(4) != 0 & (!BackButton->Get() || !StartButton->Get()))
 	//{
 
@@ -34,7 +30,12 @@ void Grabber::Initialize()
 		else if(BackButton->Get())
 		{
 			speed = -1;
-		}else
+		}
+		else if(YButton->Get())
+		{
+			speed = -.2;
+		}
+		else
 		{
 			speed = 0;
 		}
@@ -49,7 +50,7 @@ void Grabber::Execute() {
 
 // Make this return true when this Command no longer needs to run execute()
 bool Grabber::IsFinished() {
-	return true;
+	return false;
 }
 
 // Called once after isFinished returns true

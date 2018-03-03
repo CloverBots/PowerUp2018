@@ -5,35 +5,36 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-#include "DriveToSwitch.h"
-
-DriveToSwitch::DriveToSwitch() {
+#include "AutoGrabber.h"
+#include "Subsystems/GrabberSubsystem.h"
+AutoGrabber::AutoGrabber(double speed) : speed(speed) {
 	// Use Requires() here to declare subsystem dependencies
 	// eg. Requires(Robot::chassis.get());
+	Requires(CommandBase::grabber.get());
 }
 
 // Called just before this Command runs the first time
-void DriveToSwitch::Initialize() {
+void AutoGrabber::Initialize() {
 
 }
 
 // Called repeatedly when this Command is scheduled to run
-void DriveToSwitch::Execute() {
-
+void AutoGrabber::Execute() {
+	CommandBase::grabber->SetGrabberSpeed(speed);
 }
 
 // Make this return true when this Command no longer needs to run execute()
-bool DriveToSwitch::IsFinished() {
-	return false;
+bool AutoGrabber::IsFinished() {
+	return true;
 }
 
 // Called once after isFinished returns true
-void DriveToSwitch::End() {
+void AutoGrabber::End() {
 
 }
 
 // Called when another command which requires one or more of the same
 // subsystems is scheduled to run
-void DriveToSwitch::Interrupted() {
+void AutoGrabber::Interrupted() {
 
 }

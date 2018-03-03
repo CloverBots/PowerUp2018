@@ -7,15 +7,15 @@
 
 #pragma once
 
-#include <Commands/Command.h>
-
-class DriveToSwitch : public frc::Command {
+#include <Commands/CommandGroup.h>
+#include "DriveDistance.h"
+#include "Rotate.h"
+#include "AutoGrabberLift.h"
+#include "AutoGrabber.h"
+#include "DelayCommand.h"
+#include "AutoDrive.h"
+class CenterAuto : public frc::CommandGroup {
 public:
-	DriveToSwitch();
-	void Initialize() override;
-	void Execute() override;
-	bool IsFinished() override;
-	void End() override;
-	void Interrupted() override;
+	CenterAuto();
 };
 

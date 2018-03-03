@@ -14,15 +14,10 @@
 OI::OI() {
 	pDriveStick = new Joystick(0);
 	pOperatorStick = new Joystick(1);
-	m_Camera = CameraServer::GetInstance()->StartAutomaticCapture(0);
-	m_Camera.SetResolution(CAMERA_X_RES, CAMERA_Y_RES);
-	m_Camera.SetFPS(30);
-	Rbumper = new JoystickButton(pOperatorStick, 6);
-	Lbumper = new JoystickButton(pOperatorStick, 5);
-	Rbumper->WhenPressed(new Lift(1, -.1));
-	Rbumper->WhenReleased(new Lift(0, 0));
-	Lbumper->WhenPressed(new Lift(0, -1));
-	Lbumper->WhenReleased(new Lift(0, 0));
+	//m_Camera = CameraServer::GetInstance()->StartAutomaticCapture(0);
+	//m_Camera.SetResolution(CAMERA_X_RES, CAMERA_Y_RES);
+	//m_Camera.SetFPS(30);
+
 //	AButton->WhenPressed(new GrabberLift(0));//lower
 //	BButton->WhenPressed(new GrabberLift(10));//middle
 //	XButton->WhenPressed(new GrabberLift(100));//upper

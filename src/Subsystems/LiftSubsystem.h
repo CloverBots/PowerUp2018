@@ -17,6 +17,7 @@ public:
 	LiftSubsystem();
 	void SetSpeed(double liftspeed, double minispeed);
 	void InitDefaultCommand();
+	bool GetLimit();
 };
 
 #endif  // LiftSubsystem_H

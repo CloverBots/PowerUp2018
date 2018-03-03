@@ -1,5 +1,6 @@
 #include "AutoDrive.h"
 #include "CommandBase.h"
+#include <iostream>
 
 AutoDrive::AutoDrive(double speed, double turn) : speed(speed),turn(turn){
 	// Use Requires() here to declare subsystem dependencies
@@ -20,6 +21,7 @@ void AutoDrive::Execute() {
 
 // Make this return true when this Command no longer needs to run execute()
 bool AutoDrive::IsFinished() {
+	std::cout << "Auto Drive Done!" << std::endl;
 	return true;
 }
 

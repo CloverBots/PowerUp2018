@@ -1,7 +1,7 @@
 #include "Rotate.h"
 #include "CommandBase.h"
 #include <iostream>
-Rotate::Rotate(double angle) : m_targetAngle(angle)
+Rotate::Rotate(double angle, float P, float I, float D) : m_targetAngle(angle), m_P(P) ,m_I(I) ,m_D(D)
 {
 	Requires(CommandBase::driveSubsystem.get());
 }
@@ -23,7 +23,9 @@ bool Rotate::IsFinished()
 {
 	if(CommandBase::driveSubsystem->RotateOnTarget())
 	{
+		std::cout << "Rotate Done!" << std::endl;
 		CommandBase::driveSubsystem->SetRotatePIDEnabled(false);
+		CommandBase::driveSubsystem->ResetGyro();
 		return true;
 	}else{
 		return false;

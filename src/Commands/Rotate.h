@@ -5,9 +5,11 @@
 
 class Rotate : public CommandBase {
 	double m_targetAngle;
-
+	float m_P = 0.013f;
+	float m_I = 0.0f;
+	float m_D = 0.01f;
 public:
-	Rotate(double angle);
+	Rotate(double angle, float P = 0.013f, float I = 0.0, float D = 0.1);
 	void Initialize();
 	void Execute();
 	bool IsFinished();

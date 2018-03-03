@@ -5,6 +5,10 @@
 
 class Grabber : public CommandBase {
 private:
+	Joystick* pOperatorStick;
+	JoystickButton* YButton;
+	JoystickButton* BackButton;
+	JoystickButton* StartButton;
 	double speed;
 public:
 	Grabber();

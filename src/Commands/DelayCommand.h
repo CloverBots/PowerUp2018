@@ -4,16 +4,19 @@
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
-#include <WPILib.h>
+
 #pragma once
 
-class OI {
+#include <Commands/Command.h>
+
+class DelayCommand : public frc::Command {
+	double time;
 public:
-	const static int CAMERA_X_RES = 160;
-	const static int CAMERA_Y_RES = 120;
-	//cs::UsbCamera m_Camera;
-	Joystick* pDriveStick;
-	Joystick* pOperatorStick;
-	Joystick* GetDriveStick();
-	OI();
+	DelayCommand(double time);
+	void Initialize() override;
+	void Execute() override;
+	bool IsFinished() override;
+	void End() override;
+	void Interrupted() override;
 };
+

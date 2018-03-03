@@ -4,16 +4,23 @@
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
-#include <WPILib.h>
+
 #pragma once
 
-class OI {
+#include <Commands/Command.h>
+#include "../CommandBase.h"
+#include "WPILib.h"
+class AutoGrabberLift : public frc::Command {
+	bool Done = false;
+	double Speed = 0;
+	double SetPoint = 0;
+	const double MAX_SPEED = .5;
 public:
-	const static int CAMERA_X_RES = 160;
-	const static int CAMERA_Y_RES = 120;
-	//cs::UsbCamera m_Camera;
-	Joystick* pDriveStick;
-	Joystick* pOperatorStick;
-	Joystick* GetDriveStick();
-	OI();
+	AutoGrabberLift(double SetPoint);
+	void Initialize() override;
+	void Execute() override;
+	bool IsFinished() override;
+	void End() override;
+	void Interrupted() override;
 };
+

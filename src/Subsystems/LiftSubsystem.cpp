@@ -2,6 +2,7 @@
 #include "../RobotMap.h"
 #include "WPILib.h"
 #include <ctre/Phoenix.h>
+#include "Commands/Lift.h"
 
 LiftSubsystem::LiftSubsystem() : Subsystem("LiftSubsystem") {
 	Lift_Motor_Right = new WPI_VictorSPX(RobotMap::LIFT_MOTOR_RIGHT);
@@ -12,14 +13,14 @@ LiftSubsystem::LiftSubsystem() : Subsystem("LiftSubsystem") {
 
 void LiftSubsystem::InitDefaultCommand() {
 	// Set the default command for a subsystem here.
-	// SetDefaultCommand(new MySpecialCommand());
+	SetDefaultCommand(new Lift());
 }
 
 void LiftSubsystem::SetSpeed(double liftspeed, double minispeed) {
 	Lift_Motor_Right->Set(liftspeed);
 	Lift_Motor_Left->Set(liftspeed);
 	Lift_Motor_Up->Set(minispeed);
-	/*
+/*
 	if(speed > 0)
 	{
 		if(Limit->Get())
@@ -57,6 +58,11 @@ void LiftSubsystem::SetSpeed(double liftspeed, double minispeed) {
 		Lift_Motor_Up->Set(0);
 	}
 	*/
+}
+
+bool LiftSubsystem::GetLimit()
+{
+	return Limit->Get();
 }
 
 // Put methods for controlling this subsystem

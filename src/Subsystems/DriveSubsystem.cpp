@@ -25,9 +25,9 @@ DriveSubsystem::DriveSubsystem() : Subsystem("driveSubsystem") {
 	 	RotatePID = new RotatePIDController(m_RotateP, m_RotateI, m_RotateD, m_gyro, Front_Left_Motor, Middle_Left_Motor, Back_Left_Motor, Front_Right_Motor, Middle_Right_Motor, Back_Right_Motor);
 		PID->SetOutputRange(-1,1);
 		PID->SetPIDSourceType(PIDSourceType::kDisplacement);
-		PID->SetTolerance(1);
+		PID->SetAbsoluteTolerance(3);
 		RotatePID->SetOutputRange(-1,1);
-		RotatePID->SetTolerance(1);
+		RotatePID->SetAbsoluteTolerance(4);
 		RotatePID->SetPIDSourceType(PIDSourceType::kDisplacement);
 }
 
@@ -116,6 +116,14 @@ void DriveSubsystem::SetPID(double P, double I, double D)
 	PID->SetPID(P, I, D);
 }
 
+void DriveSubsystem::SetRotatePID(double P, double I, double D)
+{
+	m_RotateP = P;
+	m_RotateI = I;
+	m_RotateD = D;
+	RotatePID->SetPID(P, I, D);
+}
+
 void DriveSubsystem::UpdateFromSmartDashboard()
 {
 	SetPID(
@@ -137,4 +145,10 @@ double DriveSubsystem::GetDistance()
 bool DriveSubsystem::RotateOnTarget()
 {
 	return RotatePID->OnTarget();
+}
+
+void DriveSubsystem::DisableAllPID()
+{
+	RotatePID->Disable();
+	PID->Disable();
 }

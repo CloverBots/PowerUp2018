@@ -3,8 +3,14 @@
 #include <WPILib.h>
 
 class Lift : public CommandBase {
+private:
+	Joystick* pDriveStick;
+	Joystick* pOperatorStick;
+	JoystickButton* Rbumper;
+	JoystickButton* Lbumper;
+	JoystickButton* StartButton;
 public:
-	Lift(double liftspeed, double minispeed);
+	Lift();
 	void Initialize();
 	void Execute();
 	bool IsFinished();

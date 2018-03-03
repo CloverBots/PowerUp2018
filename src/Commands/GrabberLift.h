@@ -4,6 +4,13 @@
 #include "../CommandBase.h"
 #include "WPILib.h"
 class GrabberLift : public CommandBase {
+private:
+	Joystick* pOperatorStick;
+	JoystickButton* AButton;
+	JoystickButton* BButton;
+	JoystickButton* XButton;
+	JoystickButton* LButton;
+	JoystickButton* RButton;
 public:
 	double Speed = 0;
 	double SetPoint = 0;

@@ -83,7 +83,6 @@ class RotatePIDController :
   virtual void SetPercentTolerance(double percentValue);
   virtual void SetToleranceBuffer(int buf = 1);
   virtual bool OnTarget() const;
-
   void Enable() override;
   void Disable() override;
   bool IsEnabled() const override;

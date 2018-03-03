@@ -6,32 +6,27 @@
 #include <iostream>
 GrabberLift::GrabberLift()
 {
-
 	Requires(CommandBase::grabberLiftSubsystem.get());
-	// Use Requires() here to declare subsystem dependencies
-	// eg. Requires(Robot::chassis.get());
-}
-
-// Called just before this Command runs the first time
-void GrabberLift::Initialize()
-{
-}
-
-// Called repeatedly when this Command is scheduled to run
-void GrabberLift::Execute()
-{
-	Joystick* pOperatorStick;
 	pOperatorStick = new Joystick(1);
-	JoystickButton* AButton;
-	JoystickButton* BButton;
-	JoystickButton* XButton;
-	JoystickButton* LButton;
-	JoystickButton* RButton;
 	AButton = new JoystickButton(pOperatorStick, 1);
 	BButton = new JoystickButton(pOperatorStick, 2);
 	XButton = new JoystickButton(pOperatorStick, 3);
 	LButton = new JoystickButton(pOperatorStick, 9);
 	RButton = new JoystickButton(pOperatorStick, 10);
+
+	// Use Requires() here to declare subsystem dependencies
+	// eg. Requires(Robot::chassis.get());
+}
+
+// Called just before this Command runs the first time`
+void GrabberLift::Initialize()
+{
+
+}
+
+// Called repeatedly when this Command is scheduled to run
+void GrabberLift::Execute()
+{
 	if(XButton->Get())
 	{
 		SetPoint = 0;
@@ -42,7 +37,7 @@ void GrabberLift::Execute()
 	}
 	else if(BButton->Get())
 	{
-		SetPoint = 28000;
+		SetPoint = 30000;
 	}
 	else if(LButton->Get())
 	{
@@ -104,7 +99,7 @@ bool GrabberLift::IsFinished() {
 	//{
 	//	return false;
 	//}
-	return true;
+	return false;
 }
 
 // Called once after isFinished returns true

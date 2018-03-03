@@ -20,7 +20,7 @@ void DriveFromInput::Execute() {
 	CommandBase::driveSubsystem->Drive(
 			pDriveStick->GetRawAxis(1),
 			pDriveStick->GetRawAxis(4));
-
+	//Wait(.001);
 	if(pDriveStick->GetRawButton(1))
 	{
 		CommandBase::driveSubsystem->Shift(DoubleSolenoid::Value::kForward);

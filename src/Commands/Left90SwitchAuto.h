@@ -4,16 +4,18 @@
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
-#include <WPILib.h>
+
 #pragma once
 
-class OI {
+#include <Commands/CommandGroup.h>
+#include "DriveDistance.h"
+#include "Rotate.h"
+#include "AutoGrabberLift.h"
+#include "AutoGrabber.h"
+#include "DelayCommand.h"
+#include "AutoDrive.h"
+class Left90SwitchAuto : public frc::CommandGroup {
 public:
-	const static int CAMERA_X_RES = 160;
-	const static int CAMERA_Y_RES = 120;
-	//cs::UsbCamera m_Camera;
-	Joystick* pDriveStick;
-	Joystick* pOperatorStick;
-	Joystick* GetDriveStick();
-	OI();
+	Left90SwitchAuto();
 };
+

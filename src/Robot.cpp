@@ -11,13 +11,13 @@
 #include <SmartDashboard/SendableChooser.h>
 #include <SmartDashboard/SmartDashboard.h>
 #include <TimedRobot.h>
-#include "Commands/DriveToSwitchAutoLeft.h"
-#include "Commands/DriveToSwitchAutoRight.h"
-#include "Commands/DriveToSwitchForwardLeft.h"
-#include "Commands/DriveToSwitchForwardRight.h"
 #include "Commands/DriveForwardAuto.h"
 #include "Commands/Rotate.h"
-#include "Commands/DriveToSwitch.h"
+#include "Commands/CenterAuto.h"
+#include "Commands/Left90SwitchAuto.h"
+#include "Commands/Right90SwitchAuto.h"
+#include "Commands/ScaleLeft.h"
+#include "Commands/ScaleRight.h"
 #include <iostream>
 
 class Robot : public frc::TimedRobot {
@@ -28,10 +28,12 @@ public:
 		c->Start();
 		c->SetClosedLoopControl(true);
 		m_chooser.AddDefault("DriveForward", new DriveForwardAuto);
-		m_chooser.AddObject("DriveToSwitch", new DriveToSwitch);
-		m_chooser.AddObject("DriveToSwtichForwardRight", new DriveToSwitchForwardRight);
-		m_chooser.AddObject("DriveToSwtichForwardLeft", new DriveToSwitchForwardLeft);
-		m_chooser.AddObject("TempRotate", new Rotate(90));
+		m_chooser.AddObject("Center", new CenterAuto);
+		m_chooser.AddObject("Right90Switch", new Right90SwitchAuto);
+		m_chooser.AddObject("Left90Switch", new Left90SwitchAuto);
+		m_chooser.AddObject("ScaleRight", new ScaleRight);
+		m_chooser.AddObject("ScaleLeft", new ScaleLeft);
+		m_chooser.AddObject("Rotate", new Rotate(90));
 		frc::SmartDashboard::PutData("Auto Chooser" , &m_chooser);
 		frc::SmartDashboard::PutNumber("Drive P", 0.0);
 		frc::SmartDashboard::PutNumber("Drive I", 0.0);
@@ -68,48 +70,7 @@ public:
 	void AutonomousInit() override {
 		CommandBase::driveSubsystem->ResetDrive();
 		c->Start();
-		autonomousCommand.reset(new DriveToSwitchForwardRight);
-		std::string gameData;
-		gameData = frc::DriverStation::GetInstance().GetGameSpecificMessage();
-
-		if(m_chooser.GetSelected() == Rotate(90))
-		{
-			std::cout << "ROTATE" <<std::endl;
-			autonomousCommand.reset(new Rotate(90));
-		}
-		if(gameData[0] == 'R')
-		{
-			std::cout << "R selected" << std::endl;
-			if(m_chooser.GetSelected() == DriveToSwitch)
-			{
-				autonomousCommand.reset(new DriveToSwitchAutoRight);
-			}
-			if(m_chooser.GetSelected() == DriveToSwitchForwardRight)
-			{
-				autonomousCommand.reset(new DriveToSwitchForwardRight);
-			}
-			if(m_chooser.GetSelected() == DriveToSwitchForwardLeft)
-			{
-				autonomousCommand.reset(new DriveForwardAuto);
-			}
-		}
-		else
-		{
-			if(m_chooser.GetSelected() == DriveToSwitch)
-			{
-				autonomousCommand.reset(new DriveToSwitchAutoLeft);
-			}
-			if(m_chooser.GetSelected() == DriveToSwitchForwardRight)
-			{
-				autonomousCommand.reset(new DriveForwardAuto);
-			}
-			if(m_chooser.GetSelected() == DriveToSwitchForwardLeft)
-			{
-				autonomousCommand.reset(new DriveToSwitchForwardLeft);
-			}
-		}
-
-	//	autonomousCommand.reset(new DriveToSwitchForwardLeft);
+		autonomousCommand.reset(m_chooser.GetSelected());
 		if (autonomousCommand.get() != nullptr) {
 			autonomousCommand->Start();
 		}
@@ -120,6 +81,7 @@ public:
 	}
 
 	void TeleopInit() override {
+		CommandBase::driveSubsystem->DisableAllPID();
 		CommandBase::grabberLiftSubsystem->Reset();
 		CommandBase::driveSubsystem->SetDrivePIDEnabled(false);
 		CommandBase::driveSubsystem->SetRotatePIDEnabled(false);

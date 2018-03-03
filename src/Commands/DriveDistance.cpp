@@ -1,7 +1,7 @@
 #include "DriveDistance.h"
 #include "CommandBase.h"
 #include <iostream>
-DriveDistance::DriveDistance(double distance) : Distance(distance){
+DriveDistance::DriveDistance(double distance, float P, float I, float D) : Distance(distance), m_P(P) ,m_I(I) ,m_D(D){
 	// Use Requires() here to declare subsystem dependencies
 	// eg. Requires(Robot::chassis.get());
 	Requires(CommandBase::driveSubsystem.get());
@@ -9,7 +9,7 @@ DriveDistance::DriveDistance(double distance) : Distance(distance){
 
 // Called just before this Command runs the first time
 void DriveDistance::Initialize() {
-	std::cout << "DRIVE" << std::endl;
+	CommandBase::driveSubsystem->SetPID(m_P, m_I, m_D);
 	CommandBase::driveSubsystem->Shift(DoubleSolenoid::Value::kForward);
 	CommandBase::driveSubsystem->SetDrive(true, Distance);
 }
@@ -25,19 +25,14 @@ bool DriveDistance::IsFinished()
 	if(CommandBase::driveSubsystem->OnTarget())
 	{
 		CommandBase::driveSubsystem->SetDrivePIDEnabled(false);
+		CommandBase::driveSubsystem->ResetDrive();
+		std::cout << "Drive Done!" << std::endl;
 		return true;
 	}
 	else
 	{
 		return false;
 	}
-//	if(std::fabs(Distance - CommandBase::driveSubsystem->GetDistance()) < 2)
-//	{
-//		std::cout << "DONE!" << std::endl;
-//		return true;
-//	}else{
-//		return false;
-//	}
 }
 
 // Called once after isFinished returns true
