@@ -19,9 +19,9 @@ private:
 	float m_DriveP = 0.011f;
 	float m_DriveI = 0.0f;
 	float m_DriveD = 0.1f;
-	float m_RotateP = 0.0152f;
+	float m_RotateP = 0.0157f;
 	float m_RotateI = 0.0f;
-	float m_RotateD = 0.01f;
+	float m_RotateD = 0.007f;
 	EncPIDSource* Output;
 	WPI_TalonSRX* Front_Right_Motor;
 	WPI_TalonSRX* Front_Left_Motor;

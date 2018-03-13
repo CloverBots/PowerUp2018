@@ -13,11 +13,12 @@
 #include <TimedRobot.h>
 #include "Commands/DriveForwardAuto.h"
 #include "Commands/Rotate.h"
-#include "Commands/RunCenter.h"
 #include "Commands/Left90SwitchAuto.h"
 #include "Commands/Right90SwitchAuto.h"
 #include "Commands/ScaleLeft.h"
 #include "Commands/ScaleRight.h"
+#include "Commands/CenterLeft.h"
+#include "Commands/CenterRight.h"
 #include <iostream>
 
 class Robot : public frc::TimedRobot {
@@ -27,17 +28,21 @@ public:
 		CommandBase::Init();
 		c->Start();
 		c->SetClosedLoopControl(true);
-		m_chooser.AddDefault("DriveForward", new DriveForwardAuto);
-		m_chooser.AddObject("Center", new RunCenter);
-		m_chooser.AddObject("Right90Switch", new Right90SwitchAuto);
-		m_chooser.AddObject("Left90Switch", new Left90SwitchAuto);
-		m_chooser.AddObject("ScaleRight", new ScaleRight);
-		m_chooser.AddObject("ScaleLeft", new ScaleLeft);
-		m_chooser.AddObject("Rotate", new Rotate(90));
+//		m_chooser.AddDefault("DriveForward", new DriveForwardAuto);
+//		m_chooser.AddObject("Center", new RunCenter);
+//		m_chooser.AddObject("Right90Switch", new Right90SwitchAuto);
+//		m_chooser.AddObject("Left90Switch", new Left90SwitchAuto);
+//		m_chooser.AddObject("ScaleRight", new ScaleRight);
+//		m_chooser.AddObject("ScaleLeft", new ScaleLeft);
+//		m_chooser.AddObject("Rotate", new Rotate(90));
+		m_chooser.AddDefault("DriveForward", "DriveForwardAuto");
+		m_chooser.AddObject("Center", "CenterAuto");
+		m_chooser.AddObject("Right90Switch", "Right90SwitchAuto");
+		m_chooser.AddObject("Left90Switch", "Left90SwitchAuto");
+		m_chooser.AddObject("ScaleRight", "ScaleRight");
+		m_chooser.AddObject("ScaleLeft", "ScaleLeft");
 		frc::SmartDashboard::PutData("Auto Chooser" , &m_chooser);
-		frc::SmartDashboard::PutNumber("Drive P", 0.0);
-		frc::SmartDashboard::PutNumber("Drive I", 0.0);
-		frc::SmartDashboard::PutNumber("Drive D", 0.0);
+		frc::SmartDashboard::PutNumber("Gyro", 0.0);
 	}
 
 	/**
@@ -68,15 +73,37 @@ public:
 	 * to the if-else structure below with additional strings & commands.
 	 */
 	void AutonomousInit() override {
+		std::cout << "RUNNING AUTO YAY!" << std::endl;
 		CommandBase::driveSubsystem->ResetDrive();
+		CommandBase::driveSubsystem->ResetGyro();
 		c->Start();
-		autonomousCommand.reset(m_chooser.GetSelected());
+		std::string gameData;
+		gameData = frc::DriverStation::GetInstance().GetGameSpecificMessage();
+		if(m_chooser.GetSelected() == "DriveForwardAuto")
+		{
+			autonomousCommand.reset(new DriveForwardAuto);
+		}
+		if(gameData[0] == 'R')
+		{
+			if(m_chooser.GetSelected() == "CenterAuto")
+			{
+				autonomousCommand.reset(new CenterRight);
+			}
+		}
+		else if(gameData[0] == 'L')
+		{
+			if(m_chooser.GetSelected() == "CenterAuto")
+			{
+				autonomousCommand.reset(new CenterLeft);
+			}
+		}
 		if (autonomousCommand.get() != nullptr) {
 			autonomousCommand->Start();
 		}
 	}
 
 	void AutonomousPeriodic() override {
+		CommandBase::driveSubsystem->UpdateFromSmartDashboard();
 		frc::Scheduler::GetInstance()->Run();
 	}
 
@@ -96,7 +123,11 @@ public:
 		}
 	}
 
-	void TeleopPeriodic() override { frc::Scheduler::GetInstance()->Run(); }
+	void TeleopPeriodic() override
+	{
+		CommandBase::driveSubsystem->UpdateFromSmartDashboard();
+		frc::Scheduler::GetInstance()->Run();
+	}
 
 	void TestPeriodic() override {}
 
@@ -105,7 +136,7 @@ private:
 	// doesn't have undefined behavior and potentially crash.
 	std::unique_ptr<frc::Command> autonomousCommand = nullptr;	//ExampleCommand m_defaultAuto;
 	//MyAutoCommand m_myAuto;
-	frc::SendableChooser<frc::Command*> m_chooser;
+	frc::SendableChooser<std::string> m_chooser;
 };
 
 START_ROBOT_CLASS(Robot)

@@ -14,9 +14,8 @@
 #include "AutoGrabber.h"
 #include "DelayCommand.h"
 #include "AutoDrive.h"
-class CenterAuto : public frc::CommandGroup {
+class CenterLeft : public frc::CommandGroup {
 public:
-	CenterAuto(char side);
-	void Initilize();
+	CenterLeft();
 };
 

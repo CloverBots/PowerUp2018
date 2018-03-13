@@ -7,15 +7,15 @@
 
 #pragma once
 
-#include <Commands/Command.h>
-
-class RunCenter : public frc::Command {
+#include <Commands/CommandGroup.h>
+#include "DriveDistance.h"
+#include "Rotate.h"
+#include "AutoGrabberLift.h"
+#include "AutoGrabber.h"
+#include "DelayCommand.h"
+#include "AutoDrive.h"
+class CenterRight : public frc::CommandGroup {
 public:
-	RunCenter();
-	void Initialize() override;
-	void Execute() override;
-	bool IsFinished() override;
-	void End() override;
-	void Interrupted() override;
+	CenterRight();
 };
 

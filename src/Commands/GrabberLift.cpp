@@ -39,35 +39,47 @@ void GrabberLift::Execute()
 	{
 		SetPoint = 30000;
 	}
-	else if(LButton->Get())
+//	else if(LButton->Get())
+//	{
+//		CommandBase::grabberLiftSubsystem->Reset();
+//		Speed = -.5;
+//		goto skip;
+//	}
+//	else if(RButton->Get())
+//	{
+//		CommandBase::grabberLiftSubsystem->Reset();
+//		Speed = .5;
+//		goto skip;
+	else if(pOperatorStick->GetRawAxis(1) != 0)
 	{
 		CommandBase::grabberLiftSubsystem->Reset();
-		Speed = -.5;
-		goto skip;
-	}
-	else if(RButton->Get())
-	{
-		CommandBase::grabberLiftSubsystem->Reset();
-		Speed = .5;
+		Speed = pOperatorStick->GetRawAxis(1);
 		goto skip;
 	}else{
 		Speed = 0;
 		SetPoint = CommandBase::grabberLiftSubsystem->GetDistance();
 	}
-
+	if(fabs(SetPoint - CommandBase::grabberLiftSubsystem->GetDistance()) < 1000)
+	{
+		if(SetPoint != CommandBase::grabberLiftSubsystem->GetDistance())
+		{
+			acceleration -= .01;
+		}
+		std::cout << acceleration << std::endl;
+	}
 	if(SetPoint > CommandBase::grabberLiftSubsystem->GetDistance())
 	{
-		Speed = -MAX_SPEED;
+		Speed = -MAX_SPEED * acceleration;
 	}
 	else if(SetPoint < CommandBase::grabberLiftSubsystem->GetDistance())
 	{
-		Speed = MAX_SPEED;
+		Speed = MAX_SPEED * acceleration;
 	}
 	else if(SetPoint == 0)
 	{
 		Speed = 0;
 	}
-	if((std::abs((SetPoint - CommandBase::grabberLiftSubsystem->GetDistance())) < 00))
+	if((std::abs((SetPoint - CommandBase::grabberLiftSubsystem->GetDistance())) < 0))
 	{
 		Speed = 0;
 	}

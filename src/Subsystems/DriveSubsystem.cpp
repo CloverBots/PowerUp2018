@@ -40,12 +40,12 @@ void DriveSubsystem::InitDefaultCommand()
 
 void DriveSubsystem::Drive(double speed, double turn)
 {
-	Front_Right_Motor->Set(-(speed + (turn/2)));
-	Front_Left_Motor->Set(-speed + (turn/2));
-	Middle_Right_Motor->Set(-(speed + (turn/2)));
-	Middle_Left_Motor->Set(-speed + (turn/2));
-	Back_Right_Motor->Set(-(speed + (turn/2)));
-	Back_Left_Motor->Set(-speed + (turn/2));
+	Front_Right_Motor->Set(-(speed + (turn)));
+	Front_Left_Motor->Set(-speed + (turn));
+	Middle_Right_Motor->Set(-(speed + (turn)));
+	Middle_Left_Motor->Set(-speed + (turn));
+	Back_Right_Motor->Set(-(speed + (turn)));
+	Back_Left_Motor->Set(-speed + (turn));
 }
 
 void DriveSubsystem::Shift(DoubleSolenoid::Value value)
@@ -126,11 +126,7 @@ void DriveSubsystem::SetRotatePID(double P, double I, double D)
 
 void DriveSubsystem::UpdateFromSmartDashboard()
 {
-	SetPID(
-			(float)SmartDashboard::GetNumber("Drive P", 0.0),
-			(float)SmartDashboard::GetNumber("Drive I", 0.0),
-			(float)SmartDashboard::GetNumber("Drive D", 0.0));
-
+	SmartDashboard::PutNumber("Gyro", m_gyro->GetAngle());
 }
 
 double DriveSubsystem::GetDistance()
