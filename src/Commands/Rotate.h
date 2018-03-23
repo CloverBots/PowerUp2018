@@ -5,7 +5,7 @@
 
 class Rotate : public CommandBase {
 	double m_targetAngle;
-	float m_P = 0.013f;
+	float m_P = 0.012f;
 	float m_I = 0.0f;
 	float m_D = 0.01f;
 public:

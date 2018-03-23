@@ -1,23 +1,28 @@
 #include "DriveDistance.h"
 #include "CommandBase.h"
 #include <iostream>
-DriveDistance::DriveDistance(double distance, float P, float I, float D) : Distance(distance), m_P(P) ,m_I(I) ,m_D(D){
+DriveDistance::DriveDistance(double distance, bool rotate,float P, float I, float D) :Distance(distance), m_P(P) ,m_I(I) ,m_D(D){
 	// Use Requires() here to declare subsystem dependencies
 	// eg. Requires(Robot::chassis.get());
+	m_rotate = rotate;
 	Requires(CommandBase::driveSubsystem.get());
 }
 
 // Called just before this Command runs the first time
 void DriveDistance::Initialize() {
+	CommandBase::driveSubsystem->ResetDrive();
 	CommandBase::driveSubsystem->SetPID(m_P, m_I, m_D);
 	CommandBase::driveSubsystem->Shift(DoubleSolenoid::Value::kForward);
 	CommandBase::driveSubsystem->SetDrive(true, Distance);
+	CommandBase::driveSubsystem->ResetGyro();
+	CommandBase::driveSubsystem->SetDriveRotate(m_rotate, 0);
 }
 
 // Called repeatedly when this Command is scheduled to run
 void DriveDistance::Execute()
 {
-	//CommandBase::driveSubsystem->Drive(-.5, 0);
+	std::cout << CommandBase::driveSubsystem->GetDistance() << std::endl;
+	CommandBase::driveSubsystem->AutoDrivePID();
 }
 // Make this return true when this Command no longer needs to run execute()
 bool DriveDistance::IsFinished()
@@ -26,6 +31,7 @@ bool DriveDistance::IsFinished()
 	{
 		CommandBase::driveSubsystem->SetDrivePIDEnabled(false);
 		CommandBase::driveSubsystem->ResetDrive();
+		CommandBase::driveSubsystem->SetRotatePIDEnabled(false);
 		std::cout << "Drive Done!" << std::endl;
 		return true;
 	}

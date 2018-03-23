@@ -31,11 +31,18 @@ void Grabber::Initialize()
 //		{
 //			speed = -1;
 //		}
+	if(YButton->Get())
+	{
+		speed = -.2;
+	}
+	else
+	{
+		speed = 0;
+	}
+	if((pOperatorStick->GetRawAxis(3) - pOperatorStick->GetRawAxis(2)) != 0)
+	{
 		speed = pOperatorStick->GetRawAxis(3) - pOperatorStick->GetRawAxis(2);
-		if(YButton->Get())
-		{
-			speed = -.2;
-		}
+	}
 	//}
 	CommandBase::grabber->SetGrabberSpeed(speed);
 }

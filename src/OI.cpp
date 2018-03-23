@@ -14,9 +14,9 @@
 OI::OI() {
 	pDriveStick = new Joystick(0);
 	pOperatorStick = new Joystick(1);
-	//m_Camera = CameraServer::GetInstance()->StartAutomaticCapture(0);
-	//m_Camera.SetResolution(CAMERA_X_RES, CAMERA_Y_RES);
-	//m_Camera.SetFPS(30);
+	m_Camera = CameraServer::GetInstance()->StartAutomaticCapture(0);
+	m_Camera.SetResolution(CAMERA_X_RES, CAMERA_Y_RES);
+	m_Camera.SetFPS(30);
 
 //	AButton->WhenPressed(new GrabberLift(0));//lower
 //	BButton->WhenPressed(new GrabberLift(10));//middle

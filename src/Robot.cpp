@@ -15,10 +15,14 @@
 #include "Commands/Rotate.h"
 #include "Commands/Left90SwitchAuto.h"
 #include "Commands/Right90SwitchAuto.h"
+#include "Commands/LeftAroundSwitch.h"
+#include "Commands/RightAroundSwitch.h"
 #include "Commands/ScaleLeft.h"
 #include "Commands/ScaleRight.h"
 #include "Commands/CenterLeft.h"
 #include "Commands/CenterRight.h"
+#include "Commands/DoubleCubeAutoLeft.h"
+#include "Commands/DoubleCubeAutoRight.h"
 #include <iostream>
 
 class Robot : public frc::TimedRobot {
@@ -37,10 +41,12 @@ public:
 //		m_chooser.AddObject("Rotate", new Rotate(90));
 		m_chooser.AddDefault("DriveForward", "DriveForwardAuto");
 		m_chooser.AddObject("Center", "CenterAuto");
-		m_chooser.AddObject("Right90Switch", "Right90SwitchAuto");
+		m_chooser.AddObject("Right90Switch", "v");
 		m_chooser.AddObject("Left90Switch", "Left90SwitchAuto");
 		m_chooser.AddObject("ScaleRight", "ScaleRight");
 		m_chooser.AddObject("ScaleLeft", "ScaleLeft");
+		m_chooser.AddObject("DoubleCubeAutoRight", "DoubleCubeAutoRight");
+		m_chooser.AddObject("DoubleCubeAutoLeft", "DoubleCubeAutoLeft");
 		frc::SmartDashboard::PutData("Auto Chooser" , &m_chooser);
 		frc::SmartDashboard::PutNumber("Gyro", 0.0);
 	}
@@ -74,6 +80,7 @@ public:
 	 */
 	void AutonomousInit() override {
 		std::cout << "RUNNING AUTO YAY!" << std::endl;
+		CommandBase::grabberLiftSubsystem->Reset();
 		CommandBase::driveSubsystem->ResetDrive();
 		CommandBase::driveSubsystem->ResetGyro();
 		c->Start();
@@ -83,20 +90,78 @@ public:
 		{
 			autonomousCommand.reset(new DriveForwardAuto);
 		}
+		autonomousCommand.reset(new DriveForwardAuto);
+		if(gameData[1] == 'R')
+		{
+			if(m_chooser.GetSelected() == "ScaleRight")
+			{
+				autonomousCommand.reset(new ScaleRight);
+				goto skip_switch;
+			}
+		}
+		if(gameData[1] == 'L')
+		{
+			if(m_chooser.GetSelected() == "ScaleLeft")
+			{
+				autonomousCommand.reset(new ScaleLeft);
+				goto skip_switch;
+			}
+		}
 		if(gameData[0] == 'R')
 		{
+			if(m_chooser.GetSelected() == "ScaleRight")
+			{
+				autonomousCommand.reset(new Right90SwitchAuto);
+			}
 			if(m_chooser.GetSelected() == "CenterAuto")
 			{
 				autonomousCommand.reset(new CenterRight);
 			}
+			if(m_chooser.GetSelected() == "Right90SwitchAuto")
+			{
+				autonomousCommand.reset(new Right90SwitchAuto);
+			}
+			if(m_chooser.GetSelected() == "Left90SwitchAuto")
+			{
+				autonomousCommand.reset(new LeftAroundSwitch);
+			}
+			if(m_chooser.GetSelected() == "DoubleCubeAutoRight")
+			{
+				autonomousCommand.reset(new DoubleCubeAutoRight);
+			}
+			if(m_chooser.GetSelected() == "DoubleCubeAutoLeft")
+			{
+				autonomousCommand.reset(new DriveForwardAuto);
+			}
 		}
 		else if(gameData[0] == 'L')
 		{
+			if(m_chooser.GetSelected() == "ScaleRight")
+			{
+				autonomousCommand.reset(new Left90SwitchAuto);
+			}
 			if(m_chooser.GetSelected() == "CenterAuto")
 			{
 				autonomousCommand.reset(new CenterLeft);
 			}
+			if(m_chooser.GetSelected() == "Right90SwitchAuto")
+			{
+				autonomousCommand.reset(new RightAroundSwitch);
+			}
+			if(m_chooser.GetSelected() == "Left90SwitchAuto")
+			{
+				autonomousCommand.reset(new Left90SwitchAuto);
+			}
+			if(m_chooser.GetSelected() == "DoubleCubeAutoLeft")
+			{
+				autonomousCommand.reset(new DoubleCubeAutoLeft);
+			}
+			if(m_chooser.GetSelected() == "DoubleCubeAutoRight")
+			{
+				autonomousCommand.reset(new DriveForwardAuto);
+			}
 		}
+		skip_switch:
 		if (autonomousCommand.get() != nullptr) {
 			autonomousCommand->Start();
 		}
@@ -108,8 +173,10 @@ public:
 	}
 
 	void TeleopInit() override {
+
 		CommandBase::driveSubsystem->DisableAllPID();
 		CommandBase::grabberLiftSubsystem->Reset();
+		CommandBase::driveSubsystem->ResetDrive();
 		CommandBase::driveSubsystem->SetDrivePIDEnabled(false);
 		CommandBase::driveSubsystem->SetRotatePIDEnabled(false);
 		c->Start();

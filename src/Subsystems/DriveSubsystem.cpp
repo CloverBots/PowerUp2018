@@ -11,6 +11,28 @@ DriveSubsystem::DriveSubsystem() : Subsystem("driveSubsystem") {
 		Middle_Left_Motor = new WPI_TalonSRX(RobotMap::MIDDLE_LEFT_MOTOR);
 		Back_Right_Motor = new WPI_TalonSRX(RobotMap::BACK_RIGHT_MOTOR);
 		Back_Left_Motor = new WPI_TalonSRX(RobotMap::BACK_LEFT_MOTOR);
+
+		Front_Right_Motor->ConfigOpenloopRamp(0, 0);
+		Front_Left_Motor->ConfigOpenloopRamp(0, 0);
+		Middle_Right_Motor->ConfigOpenloopRamp(0, 0);
+		Middle_Left_Motor->ConfigOpenloopRamp(0, 0);
+		Back_Right_Motor->ConfigOpenloopRamp(0, 0);
+		Back_Left_Motor->ConfigOpenloopRamp(0, 0);
+		Front_Right_Motor->ConfigContinuousCurrentLimit(30, 10);
+		Front_Left_Motor->ConfigContinuousCurrentLimit(30, 10);
+		Middle_Right_Motor->ConfigContinuousCurrentLimit(30, 10);
+		Middle_Left_Motor->ConfigContinuousCurrentLimit(30, 10);
+		Back_Right_Motor->ConfigContinuousCurrentLimit(30, 10);
+		Back_Left_Motor->ConfigContinuousCurrentLimit(30, 10);
+
+		Front_Right_Motor->ConfigPeakCurrentLimit(0, 10);
+		Front_Left_Motor->ConfigPeakCurrentLimit(0, 10);
+		Middle_Right_Motor->ConfigPeakCurrentLimit(0, 10);
+		Middle_Left_Motor->ConfigPeakCurrentLimit(0, 10);
+		Back_Right_Motor->ConfigPeakCurrentLimit(0, 10);
+		Back_Left_Motor->ConfigPeakCurrentLimit(0, 10);
+
+
 		Middle_Right_Motor->ConfigSelectedFeedbackSensor(phoenix::motorcontrol::FeedbackDevice::QuadEncoder, 0, 0);
 		Back_Left_Motor->ConfigSelectedFeedbackSensor(phoenix::motorcontrol::FeedbackDevice::QuadEncoder, 0, 0);
 		Middle_Right_Motor->GetSensorCollection().SetQuadraturePosition(0, 10);
@@ -20,15 +42,21 @@ DriveSubsystem::DriveSubsystem() : Subsystem("driveSubsystem") {
 		Back_Left_Motor->SetInverted(true);
 		Gear_Box = new DoubleSolenoid(0, 1);
 		m_gyro = new ADXRS450_Gyro(SPI::kOnboardCS0);
-		Output = new EncPIDSource(Middle_Right_Motor, Back_Left_Motor);
-	 	PID = new Motor3PIDController(m_DriveP, m_DriveI, m_DriveD, Output, Front_Right_Motor, Middle_Right_Motor, Back_Right_Motor, Front_Left_Motor, Middle_Left_Motor, Back_Left_Motor);
+		Source = new EncPIDSource(Middle_Right_Motor, Back_Left_Motor);
+		DriveOutput = new Motor6PIDOutput();
+		RotateOutput = new Motor6PIDOutput();
+		DrivePID = new PIDController(m_DriveP, m_DriveI, m_DriveD, Source, DriveOutput);
 	 	RotatePID = new RotatePIDController(m_RotateP, m_RotateI, m_RotateD, m_gyro, Front_Left_Motor, Middle_Left_Motor, Back_Left_Motor, Front_Right_Motor, Middle_Right_Motor, Back_Right_Motor);
-		PID->SetOutputRange(-1,1);
-		PID->SetPIDSourceType(PIDSourceType::kDisplacement);
-		PID->SetAbsoluteTolerance(3);
-		RotatePID->SetOutputRange(-1,1);
+	 	DriveRotatePID = new PIDController(m_RotateP, m_RotateI, m_RotateD, m_gyro, RotateOutput);
+	 	DrivePID->SetOutputRange(-1,1);
+	 	DrivePID->SetPIDSourceType(PIDSourceType::kDisplacement);
+	 	DrivePID->SetAbsoluteTolerance(5);
+		RotatePID->SetOutputRange(-.6,.6);
 		RotatePID->SetAbsoluteTolerance(4);
 		RotatePID->SetPIDSourceType(PIDSourceType::kDisplacement);
+		DriveRotatePID->SetOutputRange(-.6,.6);
+		DriveRotatePID->SetAbsoluteTolerance(4);
+		DriveRotatePID->SetPIDSourceType(PIDSourceType::kDisplacement);
 }
 
 void DriveSubsystem::InitDefaultCommand()
@@ -60,7 +88,7 @@ void DriveSubsystem::ResetGyro()
 
 void DriveSubsystem::ResetDrive()
 {
-	Output->Reset();
+	Source->Reset();
 }
 
 double DriveSubsystem::GetGyroAngle()
@@ -71,13 +99,13 @@ double DriveSubsystem::GetGyroAngle()
 void DriveSubsystem::SetDrivePIDEnabled(bool enabled)
 {
 
-	PID->SetSetpoint(0.0f);
+	DrivePID->SetSetpoint(0.0f);
 	Drive(0, 0);
-	PID->Reset();
+	DrivePID->Reset();
 
 	if (enabled)
 	{
-		PID->Enable();
+		DrivePID->Enable();
 	}
 }
 void DriveSubsystem::SetRotatePIDEnabled(bool enabled)
@@ -90,11 +118,21 @@ void DriveSubsystem::SetRotatePIDEnabled(bool enabled)
 		RotatePID->Enable();
 }
 
+void DriveSubsystem::SetDriveRotatePIDEnabled(bool enabled)
+{
+	DriveRotatePID->SetSetpoint(0.0f);
+	Drive(0, 0);
+	DriveRotatePID->Reset();
+
+	if (enabled)
+		DriveRotatePID->Enable();
+}
+
 void DriveSubsystem::SetDrive(bool enabled, double setpoint)
 {
 	SetRotatePIDEnabled(false);
 	SetDrivePIDEnabled(enabled);
-	PID->SetSetpoint(setpoint);
+	DrivePID->SetSetpoint(setpoint);
 }
 void DriveSubsystem::SetRotate(bool enabled, double setpoint)
 {
@@ -105,7 +143,13 @@ void DriveSubsystem::SetRotate(bool enabled, double setpoint)
 
 bool DriveSubsystem::OnTarget()
 {
-	return PID->OnTarget();
+	return DrivePID->OnTarget();
+}
+
+void DriveSubsystem::SetDriveRotate(bool enabled, double setpoint)
+{
+	SetDriveRotatePIDEnabled(enabled);
+	DriveRotatePID->SetSetpoint(setpoint);
 }
 
 void DriveSubsystem::SetPID(double P, double I, double D)
@@ -113,7 +157,7 @@ void DriveSubsystem::SetPID(double P, double I, double D)
 	m_DriveP = P;
 	m_DriveI = I;
 	m_DriveD = D;
-	PID->SetPID(P, I, D);
+	DrivePID->SetPID(P, I, D);
 }
 
 void DriveSubsystem::SetRotatePID(double P, double I, double D)
@@ -146,5 +190,16 @@ bool DriveSubsystem::RotateOnTarget()
 void DriveSubsystem::DisableAllPID()
 {
 	RotatePID->Disable();
-	PID->Disable();
+	DrivePID->Disable();
+}
+
+void DriveSubsystem::AutoDrivePID()
+{
+	std::cout << "Rotate: " << RotateOutput->GetValue() * 2 << std::endl;
+	Front_Right_Motor->Set((DriveOutput->GetValue() + (RotateOutput->GetValue() * 2)));
+	Front_Left_Motor->Set(DriveOutput->GetValue() + (RotateOutput->GetValue() * 2));
+	Middle_Right_Motor->Set((DriveOutput->GetValue() + (RotateOutput->GetValue() * 2)));
+	Middle_Left_Motor->Set(DriveOutput->GetValue() + (RotateOutput->GetValue() * 2));
+	Back_Right_Motor->Set((DriveOutput->GetValue() + (RotateOutput->GetValue() * 2)));
+	Back_Left_Motor->Set(DriveOutput->GetValue() + (RotateOutput->GetValue() * 2));
 }

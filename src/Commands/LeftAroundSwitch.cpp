@@ -5,23 +5,19 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-#include "CenterRight.h"
+#include "LeftAroundSwitch.h"
 
-CenterRight::CenterRight() {
+LeftAroundSwitch::LeftAroundSwitch() {
+	AddSequential(new DriveDistance(195));
+	AddSequential(new Rotate(90));
+	AddSequential(new DriveDistance(175));
+	AddSequential(new AutoGrabberLift(12700));
+	AddSequential(new Rotate(90));
 	AddSequential(new AutoDrive(-.5, 0));
 	AddSequential(new DelayCommand(.4));
 	AddSequential(new AutoDrive(0, 0));
 	AddSequential(new DelayCommand(.3));
-	AddSequential(new Rotate(45));
-	AddSequential(new DelayCommand(.3));
-	AddSequential(new DriveDistance(85.5, 0.018));
-	AddSequential(new Rotate(-45));
-	AddSequential(new AutoGrabberLift(12700));
-	AddSequential(new AutoDrive(-.5, 0));
-	AddSequential(new DelayCommand(.5));
-	AddSequential(new AutoDrive(0, 0));
-	AddSequential(new DelayCommand(.3));
-	AddSequential(new AutoGrabber(.5));
+	AddSequential(new AutoGrabber(1));
 	AddSequential(new DelayCommand(.5));
 	AddSequential(new AutoGrabber(0));
 }

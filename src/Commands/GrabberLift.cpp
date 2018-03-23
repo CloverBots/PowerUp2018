@@ -52,8 +52,11 @@ void GrabberLift::Execute()
 //		goto skip;
 	else if(pOperatorStick->GetRawAxis(1) != 0)
 	{
-		CommandBase::grabberLiftSubsystem->Reset();
 		Speed = pOperatorStick->GetRawAxis(1);
+		if (Speed > 0)
+		{
+			Speed /= 7;
+		}
 		goto skip;
 	}else{
 		Speed = 0;
@@ -65,7 +68,10 @@ void GrabberLift::Execute()
 		{
 			acceleration -= .01;
 		}
-		std::cout << acceleration << std::endl;
+		//std::cout << acceleration << std::endl;
+	}else
+	{
+		acceleration = 1;
 	}
 	if(SetPoint > CommandBase::grabberLiftSubsystem->GetDistance())
 	{
@@ -74,10 +80,6 @@ void GrabberLift::Execute()
 	else if(SetPoint < CommandBase::grabberLiftSubsystem->GetDistance())
 	{
 		Speed = MAX_SPEED * acceleration;
-	}
-	else if(SetPoint == 0)
-	{
-		Speed = 0;
 	}
 	if((std::abs((SetPoint - CommandBase::grabberLiftSubsystem->GetDistance())) < 0))
 	{

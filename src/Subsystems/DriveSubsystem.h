@@ -6,6 +6,7 @@
 #include <RotatePIDController.h>
 #include <ctre/Phoenix.h>
 #include "../EncPIDSource.h"
+#include "../Motor6PIDOutput.h"
 
 class DriveSubsystem : public Subsystem {
 private:
@@ -16,13 +17,15 @@ private:
 	const float m_WheelDiameter = 6;
 	const float m_WheelCircumference = m_WheelDiameter * M_PI;
 	const float m_EncScaler = 2.8444;
-	float m_DriveP = 0.011f;
+	float m_DriveP = 0.015f;
 	float m_DriveI = 0.0f;
 	float m_DriveD = 0.1f;
-	float m_RotateP = 0.0157f;
+	float m_RotateP = 0.0155f;
 	float m_RotateI = 0.0f;
 	float m_RotateD = 0.007f;
-	EncPIDSource* Output;
+	EncPIDSource* Source;
+	Motor6PIDOutput* DriveOutput;
+	Motor6PIDOutput* RotateOutput;
 	WPI_TalonSRX* Front_Right_Motor;
 	WPI_TalonSRX* Front_Left_Motor;
 	WPI_TalonSRX* Middle_Right_Motor;
@@ -31,9 +34,9 @@ private:
 	WPI_TalonSRX* Back_Left_Motor;
 	DoubleSolenoid* Gear_Box;
 	ADXRS450_Gyro* m_gyro;
-	Motor3PIDController* PID;
+	PIDController* DrivePID;
+	PIDController* DriveRotatePID;
 	RotatePIDController* RotatePID;
-
 public:
 	DriveSubsystem();
 	void Drive(double speed, double turn);
@@ -45,6 +48,8 @@ public:
 	double GetGyroAngle();
 	void SetDrivePIDEnabled(bool enabled);
 	void SetRotatePIDEnabled(bool enabled);
+	void SetDriveRotatePIDEnabled(bool enabled);
+	void SetDriveRotate(bool enabled, double setpoint);
 	void SetDrive(bool enabled, double setpoint);
 	void SetRotate(bool enabled, double setpoint);
 	bool OnTarget();
@@ -53,6 +58,7 @@ public:
 	void SetRotatePID(double P, double I, double D);
 	void UpdateFromSmartDashboard();
 	void DisableAllPID();
+	void AutoDrivePID();
 };
 
 

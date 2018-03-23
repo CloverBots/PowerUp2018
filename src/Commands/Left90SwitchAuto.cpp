@@ -8,23 +8,14 @@
 #include "Left90SwitchAuto.h"
 
 Left90SwitchAuto::Left90SwitchAuto() {
-	std::string gameData;
-	gameData = frc::DriverStation::GetInstance().GetGameSpecificMessage();
-	if(gameData[0] == 'L')
-	{
-			AddSequential(new DriveDistance(149));
-			AddSequential(new Rotate(90));
-			AddSequential(new AutoGrabberLift(12700));
-			AddSequential(new AutoDrive(-.5, 0));
-			AddSequential(new DelayCommand(.4));
-			AddSequential(new AutoDrive(0, 0));
-			AddSequential(new DelayCommand(.3));
-			AddSequential(new AutoGrabber(-1));
-			AddSequential(new DelayCommand(.5));
-			AddSequential(new AutoGrabber(0));
-	}
-	else
-	{
-	AddSequential(new DriveDistance(140));
-	}
+	AddSequential(new DriveDistance(149));
+	AddSequential(new Rotate(90));
+	AddSequential(new AutoGrabberLift(12700));
+	AddSequential(new AutoDrive(-.5, 0));
+	AddSequential(new DelayCommand(.4));
+	AddSequential(new AutoDrive(0, 0));
+	AddSequential(new DelayCommand(.3));
+	AddSequential(new AutoGrabber(1));
+	AddSequential(new DelayCommand(.5));
+	AddSequential(new AutoGrabber(0));
 }
