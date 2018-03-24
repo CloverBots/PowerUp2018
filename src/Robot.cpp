@@ -41,7 +41,7 @@ public:
 //		m_chooser.AddObject("Rotate", new Rotate(90));
 		m_chooser.AddDefault("DriveForward", "DriveForwardAuto");
 		m_chooser.AddObject("Center", "CenterAuto");
-		m_chooser.AddObject("Right90Switch", "v");
+		m_chooser.AddObject("Right90Switch", "Right90SwitchAuto");
 		m_chooser.AddObject("Left90Switch", "Left90SwitchAuto");
 		m_chooser.AddObject("ScaleRight", "ScaleRight");
 		m_chooser.AddObject("ScaleLeft", "ScaleLeft");
@@ -119,6 +119,7 @@ public:
 			}
 			if(m_chooser.GetSelected() == "Right90SwitchAuto")
 			{
+				std::cout << "Right90SwitchAuto" << std::endl;
 				autonomousCommand.reset(new Right90SwitchAuto);
 			}
 			if(m_chooser.GetSelected() == "Left90SwitchAuto")

@@ -9,7 +9,7 @@ class Rotate : public CommandBase {
 	float m_I = 0.0f;
 	float m_D = 0.01f;
 public:
-	Rotate(double angle, float P = 0.013f, float I = 0.0, float D = 0.1);
+	Rotate(double angle, float P = 0.008f, float I = 0.0, float D = 0.15);
 	void Initialize();
 	void Execute();
 	bool IsFinished();

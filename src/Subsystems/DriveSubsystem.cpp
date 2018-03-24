@@ -12,25 +12,26 @@ DriveSubsystem::DriveSubsystem() : Subsystem("driveSubsystem") {
 		Back_Right_Motor = new WPI_TalonSRX(RobotMap::BACK_RIGHT_MOTOR);
 		Back_Left_Motor = new WPI_TalonSRX(RobotMap::BACK_LEFT_MOTOR);
 
-		Front_Right_Motor->ConfigOpenloopRamp(0, 0);
-		Front_Left_Motor->ConfigOpenloopRamp(0, 0);
-		Middle_Right_Motor->ConfigOpenloopRamp(0, 0);
-		Middle_Left_Motor->ConfigOpenloopRamp(0, 0);
-		Back_Right_Motor->ConfigOpenloopRamp(0, 0);
-		Back_Left_Motor->ConfigOpenloopRamp(0, 0);
-		Front_Right_Motor->ConfigContinuousCurrentLimit(30, 10);
-		Front_Left_Motor->ConfigContinuousCurrentLimit(30, 10);
-		Middle_Right_Motor->ConfigContinuousCurrentLimit(30, 10);
-		Middle_Left_Motor->ConfigContinuousCurrentLimit(30, 10);
-		Back_Right_Motor->ConfigContinuousCurrentLimit(30, 10);
-		Back_Left_Motor->ConfigContinuousCurrentLimit(30, 10);
+		Front_Right_Motor->ConfigOpenloopRamp(0.25, 0);
+		Front_Left_Motor->ConfigOpenloopRamp(0.25, 0);
+		Middle_Right_Motor->ConfigOpenloopRamp(0.25, 0);
+		Middle_Left_Motor->ConfigOpenloopRamp(0.25, 0);
+		Back_Right_Motor->ConfigOpenloopRamp(0.25, 0);
+		Back_Left_Motor->ConfigOpenloopRamp(0.25, 0);
 
-		Front_Right_Motor->ConfigPeakCurrentLimit(0, 10);
-		Front_Left_Motor->ConfigPeakCurrentLimit(0, 10);
-		Middle_Right_Motor->ConfigPeakCurrentLimit(0, 10);
-		Middle_Left_Motor->ConfigPeakCurrentLimit(0, 10);
-		Back_Right_Motor->ConfigPeakCurrentLimit(0, 10);
-		Back_Left_Motor->ConfigPeakCurrentLimit(0, 10);
+//		Front_Right_Motor->ConfigContinuousCurrentLimit(30, 10);
+//		Front_Left_Motor->ConfigContinuousCurrentLimit(30, 10);
+//		Middle_Right_Motor->ConfigContinuousCurrentLimit(30, 10);
+//		Middle_Left_Motor->ConfigContinuousCurrentLimit(30, 10);
+//		Back_Right_Motor->ConfigContinuousCurrentLimit(30, 10);
+//		Back_Left_Motor->ConfigContinuousCurrentLimit(30, 10);
+//
+//		Front_Right_Motor->ConfigPeakCurrentLimit(0, 10);
+//		Front_Left_Motor->ConfigPeakCurrentLimit(0, 10);
+//		Middle_Right_Motor->ConfigPeakCurrentLimit(0, 10);
+//		Middle_Left_Motor->ConfigPeakCurrentLimit(0, 10);
+//		Back_Right_Motor->ConfigPeakCurrentLimit(0, 10);
+//		Back_Left_Motor->ConfigPeakCurrentLimit(0, 10);
 
 
 		Middle_Right_Motor->ConfigSelectedFeedbackSensor(phoenix::motorcontrol::FeedbackDevice::QuadEncoder, 0, 0);
@@ -68,12 +69,12 @@ void DriveSubsystem::InitDefaultCommand()
 
 void DriveSubsystem::Drive(double speed, double turn)
 {
-	Front_Right_Motor->Set(-(speed + (turn)));
-	Front_Left_Motor->Set(-speed + (turn));
-	Middle_Right_Motor->Set(-(speed + (turn)));
-	Middle_Left_Motor->Set(-speed + (turn));
-	Back_Right_Motor->Set(-(speed + (turn)));
-	Back_Left_Motor->Set(-speed + (turn));
+	Front_Right_Motor->Set(-(speed + (turn / 2)));
+	Front_Left_Motor->Set(-speed + (turn / 2));
+	Middle_Right_Motor->Set(-(speed + (turn / 2)));
+	Middle_Left_Motor->Set(-speed + (turn / 2));
+	Back_Right_Motor->Set(-(speed + (turn / 2)));
+	Back_Left_Motor->Set(-speed + (turn / 2));
 }
 
 void DriveSubsystem::Shift(DoubleSolenoid::Value value)
