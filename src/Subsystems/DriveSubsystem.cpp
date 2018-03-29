@@ -196,11 +196,11 @@ void DriveSubsystem::DisableAllPID()
 
 void DriveSubsystem::AutoDrivePID()
 {
-	std::cout << "Rotate: " << RotateOutput->GetValue() * 2 << std::endl;
-	Front_Right_Motor->Set((DriveOutput->GetValue() + (RotateOutput->GetValue() * 2)));
-	Front_Left_Motor->Set(DriveOutput->GetValue() + (RotateOutput->GetValue() * 2));
-	Middle_Right_Motor->Set((DriveOutput->GetValue() + (RotateOutput->GetValue() * 2)));
-	Middle_Left_Motor->Set(DriveOutput->GetValue() + (RotateOutput->GetValue() * 2));
-	Back_Right_Motor->Set((DriveOutput->GetValue() + (RotateOutput->GetValue() * 2)));
-	Back_Left_Motor->Set(DriveOutput->GetValue() + (RotateOutput->GetValue() * 2));
+	std::cout << "Rotate: " << RotateOutput->GetValue() * 10 << std::endl;
+	Front_Right_Motor->Set((DriveOutput->GetValue() - (RotateOutput->GetValue() * 10)));
+	Front_Left_Motor->Set(DriveOutput->GetValue() - (RotateOutput->GetValue() * 10));
+	Middle_Right_Motor->Set((DriveOutput->GetValue() - (RotateOutput->GetValue() * 10)));
+	Middle_Left_Motor->Set(DriveOutput->GetValue() + (RotateOutput->GetValue() * 10));
+	Back_Right_Motor->Set((DriveOutput->GetValue() + (RotateOutput->GetValue() * 10)));
+	Back_Left_Motor->Set(DriveOutput->GetValue() + (RotateOutput->GetValue() * 10));
 }

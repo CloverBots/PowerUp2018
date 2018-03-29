@@ -9,6 +9,8 @@ LiftSubsystem::LiftSubsystem() : Subsystem("LiftSubsystem") {
 	Lift_Motor_Left = new WPI_VictorSPX(RobotMap::LIFT_MOTOR_LEFT);
 	Lift_Motor_Up = new WPI_TalonSRX(RobotMap::LIFT_MOTOR_UP);
 	Limit = new DigitalInput(2);
+
+	flaps = new DoubleSolenoid(2, 3);
 }
 
 void LiftSubsystem::InitDefaultCommand() {
@@ -65,5 +67,10 @@ bool LiftSubsystem::GetLimit()
 	return Limit->Get();
 }
 
+
+void LiftSubsystem::Flaps(DoubleSolenoid::Value value)
+{
+	flaps->Set(value);
+}
 // Put methods for controlling this subsystem
 // here. Call these from Commands.

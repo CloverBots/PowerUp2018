@@ -113,6 +113,10 @@ public:
 			{
 				autonomousCommand.reset(new Right90SwitchAuto);
 			}
+			if(m_chooser.GetSelected() == "ScaleLeft")
+			{
+				autonomousCommand.reset(new LeftAroundSwitch);
+			}
 			if(m_chooser.GetSelected() == "CenterAuto")
 			{
 				autonomousCommand.reset(new CenterRight);
@@ -137,9 +141,13 @@ public:
 		}
 		else if(gameData[0] == 'L')
 		{
-			if(m_chooser.GetSelected() == "ScaleRight")
+			if(m_chooser.GetSelected() == "ScaleLeft")
 			{
 				autonomousCommand.reset(new Left90SwitchAuto);
+			}
+			if(m_chooser.GetSelected() == "ScaleRight")
+			{
+				autonomousCommand.reset(new RightAroundSwitch);
 			}
 			if(m_chooser.GetSelected() == "CenterAuto")
 			{

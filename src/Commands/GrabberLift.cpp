@@ -53,9 +53,9 @@ void GrabberLift::Execute()
 	else if(pOperatorStick->GetRawAxis(1) != 0)
 	{
 		Speed = pOperatorStick->GetRawAxis(1);
-		if (Speed > 0)
+		if(Speed < 0)
 		{
-			Speed /= 7;
+			Speed /= 2;
 		}
 		goto skip;
 	}else{

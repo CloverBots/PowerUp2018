@@ -21,11 +21,14 @@ EncPIDSource::~EncPIDSource()
 
 double EncPIDSource::PIDGet()
 {
-	DistanceRight += (m_pTalonRight->GetSelectedSensorPosition(0) / 54.3702 / 21.6 - DistanceOldRight);
+//	DistanceRight += (m_pTalonRight->GetSelectedSensorPosition(0) / 54.3702 / 21.6 - DistanceOldRight);
+//	DistanceOldRight = DistanceRight;
+//	DistanceLeft += (m_pTalonLeft->GetSelectedSensorPosition(0) / 54.3702 / 21.6 - DistanceOldLeft);
+//	DistanceOldLeft = DistanceLeft;
+	DistanceRight += (m_pTalonRight->GetSelectedSensorPosition(0) / 54.3702 / (21.6 * 1.388) - DistanceOldRight);
 	DistanceOldRight = DistanceRight;
-	DistanceLeft += (m_pTalonLeft->GetSelectedSensorPosition(0) / 54.3702 / 21.6 - DistanceOldLeft);
+	DistanceLeft += (m_pTalonLeft->GetSelectedSensorPosition(0) / 54.3702 / (21.6 * 1.388) - DistanceOldLeft);
 	DistanceOldLeft = DistanceLeft;
-	//std::cout << (DistanceRight + DistanceLeft) / 2 << std::endl;
 	return (DistanceRight + DistanceLeft) / 2;
 }
 

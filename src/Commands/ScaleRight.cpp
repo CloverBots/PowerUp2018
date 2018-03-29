@@ -9,10 +9,12 @@
 
 ScaleRight::ScaleRight() {
 	AddSequential(new DriveDistance(200));
-	AddSequential(new Rotate(-30));
-	AddSequential(new AutoGrabberLift(28000));
-	AddSequential(new DriveDistance(80, false, 0.02f, 0.0f, 0.08f));
-	AddSequential(new AutoGrabber(1));
+	AddSequential(new Rotate(-20));
+	AddSequential(new AutoGrabberLift(29500));
+	AddSequential(new DriveDistance(56, false));
+	AddSequential(new AutoGrabber(.3));
 	AddSequential(new DelayCommand(.5));
 	AddSequential(new AutoGrabber(0));
+	AddSequential(new DriveDistance(-24, false));
+	AddSequential(new AutoGrabberLift(0));
 }

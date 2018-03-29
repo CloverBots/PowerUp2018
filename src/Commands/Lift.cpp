@@ -10,17 +10,17 @@ Lift::Lift(){
 	Rbumper = new JoystickButton(pOperatorStick, 6);
 	Lbumper = new JoystickButton(pOperatorStick, 5);
 	StartButton = new JoystickButton(pDriveStick, 8);
-
+	XButton = new JoystickButton(pDriveStick, 3);
 	// Use Requires() here to declare subsystem dependencies
 	// eg. Requires(Robot::chassis.get());
 }
 
 // Called just before this Command runs the first time
 void Lift::Initialize() {
-	if(Rbumper->Get())
+	if(Rbumper->Get() && XButton->Get())
 	{
 		liftspeed = 1;
-		minispeed = .2;
+		minispeed = .3;
 	}else if(Lbumper->Get())
 	{
 		liftspeed = 0;

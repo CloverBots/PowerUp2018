@@ -9,6 +9,7 @@ private:
 	JoystickButton* Rbumper;
 	JoystickButton* Lbumper;
 	JoystickButton* StartButton;
+	JoystickButton* XButton;
 public:
 	Lift();
 	void Initialize();

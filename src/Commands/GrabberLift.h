@@ -14,7 +14,7 @@ private:
 public:
 	double Speed = 0;
 	double SetPoint = 0;
-	const double MAX_SPEED = .5;
+	const double MAX_SPEED = .8;
 	double acceleration = 1;
 	GrabberLift();
 	void Initialize();

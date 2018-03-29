@@ -24,9 +24,9 @@ DoubleCubeAutoRight::DoubleCubeAutoRight() {
 	AddSequential(new DelayCommand(.3));
 	AddSequential(new Rotate(90));
 	AddSequential(new DelayCommand(.4));
-	AddSequential(new DriveDistance(95));
+	AddSequential(new DriveDistance(80));
 	AddSequential(new DelayCommand(.4));
-	AddSequential(new Rotate(135));
+	AddSequential(new Rotate(-135));
 	AddSequential(new AutoGrabberLift(0));
 	AddSequential(new AutoGrabber(-1));
 	AddSequential(new DriveDistance(70));

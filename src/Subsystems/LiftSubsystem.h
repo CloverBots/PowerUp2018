@@ -11,6 +11,7 @@ private:
 	WPI_VictorSPX* Lift_Motor_Right;
 	WPI_TalonSRX* Lift_Motor_Up;
 	DigitalInput* Limit;
+	DoubleSolenoid* flaps;
 	// It's desirable that everything possible under private except
 	// for methods that implement subsystem capabilities
 public:
@@ -18,6 +19,7 @@ public:
 	void SetSpeed(double liftspeed, double minispeed);
 	void InitDefaultCommand();
 	bool GetLimit();
+	void Flaps(DoubleSolenoid::Value value);
 };
 
 #endif  // LiftSubsystem_H

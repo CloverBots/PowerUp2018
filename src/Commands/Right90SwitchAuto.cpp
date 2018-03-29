@@ -8,11 +8,11 @@
 #include "Right90SwitchAuto.h"
 #include <iostream>
 Right90SwitchAuto::Right90SwitchAuto() {
-	AddSequential(new DriveDistance(149));
+	AddSequential(new DriveDistance(139));
 	AddSequential(new Rotate(-90));
 	AddSequential(new AutoGrabberLift(12700));
 	AddSequential(new AutoDrive(-.5, 0));
-	AddSequential(new DelayCommand(.4));
+	AddSequential(new DelayCommand(.5));
 	AddSequential(new AutoDrive(0, 0));
 	AddSequential(new DelayCommand(.3));
 	AddSequential(new AutoGrabber(1));

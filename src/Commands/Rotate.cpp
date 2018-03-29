@@ -9,6 +9,10 @@ Rotate::Rotate(double angle, float P, float I, float D) : m_targetAngle(angle), 
 // Called just before this Command runs the first time
 void Rotate::Initialize()
 {
+	if(abs(m_targetAngle) == 90)
+	{
+		CommandBase::driveSubsystem->SetRotatePID(0.02f, 0.0f, 0.008f);
+	}
 	CommandBase::driveSubsystem->Shift(DoubleSolenoid::Value::kReverse);
 	CommandBase::driveSubsystem->SetRotate(true, m_targetAngle);
 }
@@ -23,7 +27,7 @@ bool Rotate::IsFinished()
 {
 	if(CommandBase::driveSubsystem->RotateOnTarget())
 	{
-		std::cout << "Rotate Done!" << std::endl;
+		//std::cout << "Rotate Done!" << std::endl;
 		CommandBase::driveSubsystem->SetRotatePIDEnabled(false);
 		CommandBase::driveSubsystem->ResetGyro();
 		return true;

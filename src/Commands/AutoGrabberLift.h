@@ -14,7 +14,7 @@ class AutoGrabberLift : public frc::Command {
 	bool Done = false;
 	double Speed = 0;
 	double SetPoint = 0;
-	const double MAX_SPEED = .5;
+	const double MAX_SPEED = .8;
 public:
 	AutoGrabberLift(double SetPoint);
 	void Initialize() override;

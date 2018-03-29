@@ -20,7 +20,7 @@ private:
 	float m_DriveP = 0.015f;
 	float m_DriveI = 0.0f;
 	float m_DriveD = 0.1f;
-	float m_RotateP = 0.01f;
+	float m_RotateP = 0.02f;
 	float m_RotateI = 0.0f;
 	float m_RotateD = 0.01f;
 	EncPIDSource* Source;
