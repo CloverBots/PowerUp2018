@@ -9,6 +9,7 @@ Rotate::Rotate(double angle, float P, float I, float D) : m_targetAngle(angle), 
 // Called just before this Command runs the first time
 void Rotate::Initialize()
 {
+	CommandBase::driveSubsystem->ResetGyro();
 	if(abs(m_targetAngle) == 90)
 	{
 		CommandBase::driveSubsystem->SetRotatePID(0.02f, 0.0f, 0.008f);

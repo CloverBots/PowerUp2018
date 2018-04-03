@@ -204,3 +204,8 @@ void DriveSubsystem::AutoDrivePID()
 	Back_Right_Motor->Set((DriveOutput->GetValue() + (RotateOutput->GetValue() * 10)));
 	Back_Left_Motor->Set(DriveOutput->GetValue() + (RotateOutput->GetValue() * 10));
 }
+
+void DriveSubsystem::Calibrate()
+{
+	m_gyro->Calibrate();
+}

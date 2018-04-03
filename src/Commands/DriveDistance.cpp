@@ -15,7 +15,7 @@ void DriveDistance::Initialize() {
 	CommandBase::driveSubsystem->Shift(DoubleSolenoid::Value::kForward);
 	CommandBase::driveSubsystem->SetDrive(true, Distance);
 	CommandBase::driveSubsystem->ResetGyro();
-	CommandBase::driveSubsystem->SetDriveRotate(m_rotate, 0);
+	//CommandBase::driveSubsystem->SetDriveRotate(m_rotate, 0);
 }
 
 // Called repeatedly when this Command is scheduled to run

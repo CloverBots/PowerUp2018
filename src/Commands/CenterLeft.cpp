@@ -14,7 +14,7 @@ CenterLeft::CenterLeft() {
 	AddSequential(new DelayCommand(.3));
 	AddSequential(new Rotate(-45));
 	AddSequential(new DelayCommand(.3));
-	AddSequential(new DriveDistance(95.5, 0.018));
+	AddSequential(new DriveDistance(95.5, false, 0.02));
 	AddSequential(new Rotate(45));
 	AddSequential(new AutoGrabberLift(12700));
 	AddSequential(new AutoDrive(-.5, 0));

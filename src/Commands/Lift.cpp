@@ -17,11 +17,11 @@ Lift::Lift(){
 
 // Called just before this Command runs the first time
 void Lift::Initialize() {
-	if(Rbumper->Get() && XButton->Get())
+	if(Rbumper->Get())
 	{
 		liftspeed = 1;
-		minispeed = .3;
-	}else if(Lbumper->Get())
+		minispeed = .25;
+	}else if(Lbumper->Get() && XButton->Get())
 	{
 		liftspeed = 0;
 		minispeed = -1;

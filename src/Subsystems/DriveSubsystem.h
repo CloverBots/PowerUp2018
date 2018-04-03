@@ -59,6 +59,7 @@ public:
 	void UpdateFromSmartDashboard();
 	void DisableAllPID();
 	void AutoDrivePID();
+	void Calibrate();
 };
 
 

@@ -14,6 +14,7 @@
 #include "AutoGrabber.h"
 #include "DelayCommand.h"
 #include "AutoDrive.h"
+#include "CalibrateGyro.h"
 class CenterLeft : public frc::CommandGroup {
 public:
 	CenterLeft();
