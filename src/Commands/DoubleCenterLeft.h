@@ -5,12 +5,17 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-#include "LeftAroundSwitch.h"
+#pragma once
 
-LeftAroundSwitch::LeftAroundSwitch() {
-	AddSequential(new AutoGrabber(-.2));
-	AddSequential(new DriveDistance(216));
-	AddSequential(new Rotate(90));
-	AddSequential(new DriveDistance(95));
-	AddSequential(new AutoGrabber(0));
-}
+#include <Commands/CommandGroup.h>
+#include "DriveDistance.h"
+#include "Rotate.h"
+#include "AutoGrabberLift.h"
+#include "AutoGrabber.h"
+#include "DelayCommand.h"
+#include "AutoDrive.h"
+class DoubleCenterLeft : public frc::CommandGroup {
+public:
+	DoubleCenterLeft();
+};
+

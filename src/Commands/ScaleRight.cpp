@@ -8,8 +8,9 @@
 #include "ScaleRight.h"
 
 ScaleRight::ScaleRight() {
-	AddSequential(new DriveDistance(200));
-	AddSequential(new Rotate(-20));
+	AddSequential(new AutoGrabber(-.2));
+	AddSequential(new DriveDistance(206));
+	AddSequential(new Rotate(-25));
 	AddSequential(new AutoGrabberLift(29500));
 	AddSequential(new DriveDistance(56, false));
 	AddSequential(new AutoGrabber(.3));

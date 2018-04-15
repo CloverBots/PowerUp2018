@@ -21,6 +21,8 @@
 #include "Commands/ScaleRight.h"
 #include "Commands/CenterLeft.h"
 #include "Commands/CenterRight.h"
+#include "Commands/DoubleCenterLeft.h"
+#include "Commands/DoubleCenterRight.h"
 #include "Commands/DoubleCubeAutoLeft.h"
 #include "Commands/DoubleCubeAutoRight.h"
 #include <iostream>
@@ -41,10 +43,13 @@ public:
 //		m_chooser.AddObject("Rotate", new Rotate(90));
 		m_chooser.AddDefault("DriveForward", "DriveForwardAuto");
 		m_chooser.AddObject("Center", "CenterAuto");
+		m_chooser.AddObject("DoubleCenter", "DoubleCenterAuto");
 		m_chooser.AddObject("Right90Switch", "Right90SwitchAuto");
 		m_chooser.AddObject("Left90Switch", "Left90SwitchAuto");
 		m_chooser.AddObject("ScaleRight", "ScaleRight");
 		m_chooser.AddObject("ScaleLeft", "ScaleLeft");
+		m_chooser.AddObject("SwitchPriorityRight", "SwitchPriorityRight");
+		m_chooser.AddObject("SwitchPriorityLeft", "SwitchPriorityLeft");
 		m_chooser.AddObject("DoubleCubeAutoRight", "DoubleCubeAutoRight");
 		m_chooser.AddObject("DoubleCubeAutoLeft", "DoubleCubeAutoLeft");
 		frc::SmartDashboard::PutData("Auto Chooser" , &m_chooser);
@@ -91,6 +96,41 @@ public:
 			autonomousCommand.reset(new DriveForwardAuto);
 		}
 		autonomousCommand.reset(new DriveForwardAuto);
+
+		if(m_chooser.GetSelected() == "SwitchPriorityRight")
+		{
+			if(gameData[0] == 'R')
+			{
+				autonomousCommand.reset(new Right90SwitchAuto);
+				goto skip_all;
+			}
+			else if(gameData[1] == 'R')
+			{
+				autonomousCommand.reset(new ScaleRight);
+				goto skip_all;
+			}else{
+				autonomousCommand.reset(new DriveForwardAuto);
+				goto skip_all;
+			}
+		}
+		if(m_chooser.GetSelected() == "SwitchPriorityLeft")
+		{
+			if(gameData[0] == 'L')
+			{
+				autonomousCommand.reset(new Left90SwitchAuto);
+				goto skip_all;
+			}
+			else if(gameData[1] == 'L')
+			{
+				autonomousCommand.reset(new ScaleLeft);
+				goto skip_all;
+			}else{
+				autonomousCommand.reset(new DriveForwardAuto);
+				goto skip_all;
+
+			}
+		}
+
 		if(gameData[1] == 'R')
 		{
 			if(m_chooser.GetSelected() == "ScaleRight")
@@ -120,6 +160,10 @@ public:
 			if(m_chooser.GetSelected() == "CenterAuto")
 			{
 				autonomousCommand.reset(new CenterRight);
+			}
+			if(m_chooser.GetSelected() == "DoubleCenterAuto")
+			{
+				autonomousCommand.reset(new DoubleCenterRight);
 			}
 			if(m_chooser.GetSelected() == "Right90SwitchAuto")
 			{
@@ -153,6 +197,10 @@ public:
 			{
 				autonomousCommand.reset(new CenterLeft);
 			}
+			if(m_chooser.GetSelected() == "DoubleCenterAuto")
+			{
+				autonomousCommand.reset(new DoubleCenterLeft);
+			}
 			if(m_chooser.GetSelected() == "Right90SwitchAuto")
 			{
 				autonomousCommand.reset(new RightAroundSwitch);
@@ -171,6 +219,7 @@ public:
 			}
 		}
 		skip_switch:
+		skip_all:
 		if (autonomousCommand.get() != nullptr) {
 			autonomousCommand->Start();
 		}

@@ -20,6 +20,7 @@ void Rotate::Initialize()
 // Called repeatedly when this Command is scheduled to run
 void Rotate::Execute()
 {
+	std::cout << "Rotate: " << CommandBase::driveSubsystem->GetGyroAngle() << std::endl;
 	//std::cout << CommandBase::driveSubsystem->GetGyroAngle() << std::endl;
 }
 

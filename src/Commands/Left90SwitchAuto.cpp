@@ -8,6 +8,7 @@
 #include "Left90SwitchAuto.h"
 
 Left90SwitchAuto::Left90SwitchAuto() {
+	AddSequential(new AutoGrabber(-.2));
 	AddSequential(new DriveDistance(139));
 	AddSequential(new Rotate(90));
 	AddSequential(new AutoGrabberLift(12700));

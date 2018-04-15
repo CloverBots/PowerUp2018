@@ -8,7 +8,9 @@
 #include "RightAroundSwitch.h"
 
 RightAroundSwitch::RightAroundSwitch() {
+	AddSequential(new AutoGrabber(-.2));
 	AddSequential(new DriveDistance(216));
 	AddSequential(new Rotate(-90));
 	AddSequential(new DriveDistance(95));
+	AddSequential(new AutoGrabber(0));
 }

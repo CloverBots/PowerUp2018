@@ -15,7 +15,7 @@ void DriveDistance::Initialize() {
 	CommandBase::driveSubsystem->Shift(DoubleSolenoid::Value::kForward);
 	CommandBase::driveSubsystem->SetDrive(true, Distance);
 	CommandBase::driveSubsystem->ResetGyro();
-	//CommandBase::driveSubsystem->SetDriveRotate(m_rotate, 0);
+	CommandBase::driveSubsystem->SetDriveRotate(m_rotate, CommandBase::driveSubsystem->GetGyroAngle());
 }
 
 // Called repeatedly when this Command is scheduled to run
@@ -31,7 +31,8 @@ bool DriveDistance::IsFinished()
 	{
 		CommandBase::driveSubsystem->SetDrivePIDEnabled(false);
 		CommandBase::driveSubsystem->ResetDrive();
-		CommandBase::driveSubsystem->SetRotatePIDEnabled(false);
+		CommandBase::driveSubsystem->SetDriveRotatePIDEnabled(false);
+		CommandBase::driveSubsystem->ResetGyro();
 		std::cout << "Drive Done!" << std::endl;
 		return true;
 	}

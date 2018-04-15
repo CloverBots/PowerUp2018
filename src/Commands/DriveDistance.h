@@ -10,7 +10,7 @@ class DriveDistance : public CommandBase {
 	float m_D = 0.1f;
 	bool m_rotate;
 public:
-	DriveDistance(double distance, bool rotate = true, float P = 0.0275, float I = 0.0, float D = 0.1); //inches
+	DriveDistance(double distance, bool rotate = true, float P = 0.028, float I = 0.0, float D = 0.1); //inches
 	void Initialize();
 	void Execute();
 	bool IsFinished();

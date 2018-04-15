@@ -8,6 +8,7 @@
 #include "CenterRight.h"
 
 CenterRight::CenterRight() {
+	AddSequential(new AutoGrabber(-.2));
 	AddSequential(new AutoDrive(-.5, 0));
 	AddSequential(new DelayCommand(.4));
 	AddSequential(new AutoDrive(0, 0));
